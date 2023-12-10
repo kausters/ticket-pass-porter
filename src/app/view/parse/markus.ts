@@ -142,7 +142,11 @@ function getTicketStart(data: string[]): DateTime {
 }
 
 function getTicketPrice(data: string[]): number {
-	return 0;
+	const prices = data.filter((str) => str.endsWith('EUR'));
+	const finalPrice = prices.at(-1);
+	assert(finalPrice !== undefined);
+
+	return parseInt(finalPrice.replace(/[.,]/, ''));
 }
 
 function getTicketDetail(data: string[]): string {
