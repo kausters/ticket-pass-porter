@@ -34,6 +34,56 @@ export async function parse(pdf: PDFDocumentProxy): Promise<string> {
 		.map((item) => item.str)
 		.filter((str) => str.trim().length > 0);
 
-	console.log(text);
-	return JSON.stringify(text);
+	const data = {
+		invoiceId: getInvoiceId(text),
+		tickets: getTickets(text),
+	};
+
+	return JSON.stringify(data);
+}
+
+function getInvoiceId(data: string[]): string {
+	const invoiceIdIndex = 1;
+	return data[invoiceIdIndex];
+}
+
+function getTickets(data: string[]): Record<string, any>[] {
+	return getTicketIndices(data)
+		.map((ticket) => data.slice(ticket.start, ticket.end + 1)) // Include the end row
+		.map(parseTicket);
+}
+
+function parseTicket(data: string[]): Record<string, any> {
+	return data;
+}
+
+function getTicketIndices(data: string[]): { start: number; end: number }[] {
+	const endMarker = 'www.forumcinemas.lv'; // A stable value within each ticket
+	const endOffset = 1; // How far the ticket ends from the endMarker
+
+	const ticketCount = data.filter((str) => str === endMarker).length;
+	const startIndex = 2;
+
+	const ticketRowIndices: { start: number; end: number }[] = [];
+
+	// First ticket starts at startIndex and ends when endMarker is found, plus one row.
+	ticketRowIndices.push({
+		start: startIndex,
+		end: data.indexOf(endMarker, startIndex) + endOffset,
+	});
+
+	// The next ticket starts at the end of the previous ticket and ends when endMarker is found, plus one row
+	for (let i = 1; i < ticketCount; i++) {
+		const previousTicket = ticketRowIndices[i - 1];
+		const start = previousTicket.end + 1; // Start at the next row
+		const end = data.indexOf(endMarker, start) + endOffset;
+
+		ticketRowIndices.push({ start, end });
+	}
+
+	if (ticketRowIndices.length !== ticketCount) {
+		throw new Error('Ticket count mismatch');
+	}
+
+	return ticketRowIndices;
 }
