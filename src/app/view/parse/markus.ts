@@ -1,9 +1,10 @@
-import { parseLatvianDateTime } from '@/app/view/parse/date-time';
-import { DateTime } from 'luxon';
+import { DateTime, DateTimeOptions } from 'luxon';
 import assert from 'node:assert';
 import { PDFDocumentProxy } from 'pdfjs-dist';
 import { TextItem } from 'pdfjs-dist/types//src/display/api';
 import { Ticket, TicketInvoice } from '../tickets.model';
+
+const dateTimeOptions: DateTimeOptions = { zone: 'Europe/Riga', locale: 'lv' };
 
 export async function isValid(pdf: PDFDocumentProxy): Promise<boolean> {
 	const metadata = await pdf.getMetadata();
@@ -100,7 +101,7 @@ function parseTicket(data: string[]): Ticket {
 		rating: data[5],
 		row: parseInt(data[10], 10),
 		seat: parseInt(data[11], 10),
-		purchased: purchased.toJSDate(),
+		purchased: getTicketPurchased(data),
 		start: getTicketStart(data),
 		price: getTicketPrice(data),
 		detail: getTicketDetail(data),
@@ -111,11 +112,33 @@ function getTicketPurchased(data: string[]): DateTime {
 	const dateString = data.at(-1);
 	assert(dateString !== undefined);
 
-	return parseLatvianDateTime(dateString);
+	return DateTime.fromFormat(dateString, 'dd.MM.yyyy HH:mm', dateTimeOptions);
 }
 
-function getTicketStart(data: string[]): Date {
-	return new Date();
+function getTicketStart(data: string[]): DateTime {
+	const [hour, minute] = data[12].split(':').map((str) => parseInt(str, 10));
+	const [month, day] = data[13].split('.').map((str) => parseInt(str, 10));
+
+	// We don't know the event start year, we'll start with the purchase year and fix it after constructing
+	const purchased = getTicketPurchased(data);
+
+	const start = DateTime.local(
+		purchased.year,
+		month,
+		day,
+		hour,
+		minute,
+		dateTimeOptions,
+	);
+
+	// Since we don't know the event start year, we base it off ticket purchase year
+	if (start > purchased) {
+		// Event already starts after it was purchased, nothing to do
+		return start;
+	} else {
+		// Event starts next year (we hopefully won't sell tickets more than a year in advance)
+		return start.plus({ years: 1 });
+	}
 }
 
 function getTicketPrice(data: string[]): number {
