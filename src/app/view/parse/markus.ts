@@ -1,10 +1,7 @@
-import { TicketInvoice, Ticket } from '@/app/view/tickets.model';
-import { PageViewport, PDFDocumentProxy, Util } from 'pdfjs-dist';
-import {
-	TextContent,
-	TextItem,
-	TextMarkedContent,
-} from 'pdfjs-dist/types//src/display/api';
+import assert from 'node:assert';
+import { PDFDocumentProxy } from 'pdfjs-dist';
+import { TextItem } from 'pdfjs-dist/types//src/display/api';
+import { Ticket, TicketInvoice } from '../tickets.model';
 
 export async function isValid(pdf: PDFDocumentProxy): Promise<boolean> {
 	const metadata = await pdf.getMetadata();
@@ -49,13 +46,13 @@ function getInvoiceId(data: string[]): string {
 function getTickets(data: string[]): Ticket[] {
 	return getTicketIndices(data)
 		.map((ticket) => data.slice(ticket.start, ticket.end + 1)) // Include the end row
-		.map(parseTicket);
-}
+		.map((data) => {
+			console.log(data);
+			const ticket = parseTicket(data);
 
-function parseTicket(data: string[]): Ticket {
-	console.log(data);
-
-	return {} as Ticket;
+			console.log(ticket);
+			return ticket;
+		});
 }
 
 function getTicketIndices(data: string[]): { start: number; end: number }[] {
@@ -87,4 +84,40 @@ function getTicketIndices(data: string[]): { start: number; end: number }[] {
 	}
 
 	return ticketRowIndices;
+}
+
+function parseTicket(data: string[]): Ticket {
+	return {
+		id: data[0],
+		auditorium: data[1],
+		section: data[2],
+		name: data[3],
+		type: data[4],
+		rating: data[5],
+		row: parseInt(data[10], 10),
+		seat: parseInt(data[11], 10),
+		purchased: getTicketPurchased(data),
+		start: getTicketStart(data),
+		price: getTicketPrice(data),
+		detail: getTicketDetail(data),
+	};
+}
+
+function getTicketPurchased(data: string[]): Date {
+	const dateString = data.at(-1);
+	assert(dateString !== undefined);
+
+	return new Date(); // TODO
+}
+
+function getTicketStart(data: string[]): Date {
+	return new Date();
+}
+
+function getTicketPrice(data: string[]): number {
+	return 0;
+}
+
+function getTicketDetail(data: string[]): string {
+	return '';
 }
