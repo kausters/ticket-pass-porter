@@ -1,3 +1,4 @@
+import { TicketInvoice, Ticket } from '@/app/view/tickets.model';
 import { PageViewport, PDFDocumentProxy, Util } from 'pdfjs-dist';
 import {
 	TextContent,
@@ -25,7 +26,7 @@ export async function isValid(pdf: PDFDocumentProxy): Promise<boolean> {
 	return true;
 }
 
-export async function parse(pdf: PDFDocumentProxy): Promise<string> {
+export async function parse(pdf: PDFDocumentProxy): Promise<TicketInvoice> {
 	const page = await pdf.getPage(1);
 	const textContent = await page.getTextContent();
 
@@ -34,12 +35,10 @@ export async function parse(pdf: PDFDocumentProxy): Promise<string> {
 		.map((item) => item.str)
 		.filter((str) => str.trim().length > 0);
 
-	const data = {
-		invoiceId: getInvoiceId(text),
+	return {
+		id: getInvoiceId(text),
 		tickets: getTickets(text),
 	};
-
-	return JSON.stringify(data);
 }
 
 function getInvoiceId(data: string[]): string {
@@ -47,14 +46,16 @@ function getInvoiceId(data: string[]): string {
 	return data[invoiceIdIndex];
 }
 
-function getTickets(data: string[]): Record<string, any>[] {
+function getTickets(data: string[]): Ticket[] {
 	return getTicketIndices(data)
 		.map((ticket) => data.slice(ticket.start, ticket.end + 1)) // Include the end row
 		.map(parseTicket);
 }
 
-function parseTicket(data: string[]): Record<string, any> {
-	return data;
+function parseTicket(data: string[]): Ticket {
+	console.log(data);
+
+	return {} as Ticket;
 }
 
 function getTicketIndices(data: string[]): { start: number; end: number }[] {

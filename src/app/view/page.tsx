@@ -1,7 +1,8 @@
 import { parse } from './parse';
 
 export default async function Page() {
-	const data = await parse();
+	const invoice = await parse();
+	const data = JSON.stringify(invoice, null, 2);
 
 	return (
 		<div>
