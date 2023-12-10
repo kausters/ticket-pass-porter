@@ -32,7 +32,7 @@ export async function parse(pdf: PDFDocumentProxy): Promise<TicketInvoice> {
 
 	const text = textContent.items
 		.filter((item): item is TextItem => 'str' in item)
-		.map((item) => item.str)
+		.map((item) => (item.hasEOL ? item.str + '\n' : item.str))
 		.filter((str) => str.trim().length > 0);
 
 	return {
@@ -48,14 +48,8 @@ function getInvoiceId(data: string[]): string {
 
 function getTickets(data: string[]): Ticket[] {
 	return getTicketIndices(data)
-		.map((ticket) => data.slice(ticket.start, ticket.end + 1)) // Include the end row
-		.map((data) => {
-			console.log(data);
-			const ticket = parseTicket(data);
-
-			console.log(ticket);
-			return ticket;
-		});
+		.map(({ start, end }) => data.slice(start, end + 1)) // Include the end row
+		.map(parseTicket);
 }
 
 function getTicketIndices(data: string[]): { start: number; end: number }[] {
@@ -90,8 +84,6 @@ function getTicketIndices(data: string[]): { start: number; end: number }[] {
 }
 
 function parseTicket(data: string[]): Ticket {
-	const purchased = getTicketPurchased(data);
-
 	return {
 		id: data[0],
 		auditorium: data[1],
@@ -149,6 +141,18 @@ function getTicketPrice(data: string[]): number {
 	return parseInt(finalPrice.replace(/[.,]/, ''));
 }
 
+function findIndexFrom<T>(
+	array: T[],
+	predicate: Parameters<Array<T>['findIndex']>[0],
+	startIndex: number,
+): number {
+	const indexInSubArray = array.slice(startIndex).findIndex(predicate);
+	return indexInSubArray === -1 ? -1 : indexInSubArray + startIndex;
+}
+
 function getTicketDetail(data: string[]): string {
-	return '';
+	// Find the first line that ends with '\n' and continue until the first line that doesn't end with '\n' (included)
+	const start = data.findIndex((str) => str.endsWith('\n'));
+	const end = findIndexFrom(data, (str) => !str.endsWith('\n'), start);
+	return data.slice(start, end + 1).join('');
 }
