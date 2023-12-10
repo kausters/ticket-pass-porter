@@ -1,3 +1,5 @@
+import { parseLatvianDateTime } from '@/app/view/parse/date-time';
+import { DateTime } from 'luxon';
 import assert from 'node:assert';
 import { PDFDocumentProxy } from 'pdfjs-dist';
 import { TextItem } from 'pdfjs-dist/types//src/display/api';
@@ -87,6 +89,8 @@ function getTicketIndices(data: string[]): { start: number; end: number }[] {
 }
 
 function parseTicket(data: string[]): Ticket {
+	const purchased = getTicketPurchased(data);
+
 	return {
 		id: data[0],
 		auditorium: data[1],
@@ -96,18 +100,18 @@ function parseTicket(data: string[]): Ticket {
 		rating: data[5],
 		row: parseInt(data[10], 10),
 		seat: parseInt(data[11], 10),
-		purchased: getTicketPurchased(data),
+		purchased: purchased.toJSDate(),
 		start: getTicketStart(data),
 		price: getTicketPrice(data),
 		detail: getTicketDetail(data),
 	};
 }
 
-function getTicketPurchased(data: string[]): Date {
+function getTicketPurchased(data: string[]): DateTime {
 	const dateString = data.at(-1);
 	assert(dateString !== undefined);
 
-	return new Date(); // TODO
+	return parseLatvianDateTime(dateString);
 }
 
 function getTicketStart(data: string[]): Date {
