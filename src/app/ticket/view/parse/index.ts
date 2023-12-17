@@ -1,8 +1,8 @@
 'use server';
 
-import { TicketInvoice } from '@/app/view/tickets.model';
 import path from 'path';
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
+import { TicketInvoice } from '../tickets.model';
 import {
 	isValid as isMarkusTicket,
 	parse as parseMarkusTicket,
