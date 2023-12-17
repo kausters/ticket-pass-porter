@@ -1,14 +1,16 @@
 'use client';
 
+import { use } from 'react';
 import { useTicketUpload } from '../ticket-upload-context';
+import { parse as parseClient } from './parse/client';
+
+async function parse(file: File) {
+	return await parseClient(file);
+}
 
 export default function Page() {
 	const { ticketFile } = useTicketUpload();
-	if (!ticketFile) {
-		return;
-	}
-
-	const invoice = {};
+	const invoice = ticketFile ? use(parse(ticketFile)) : null;
 
 	const data = JSON.stringify(invoice, null, 2);
 

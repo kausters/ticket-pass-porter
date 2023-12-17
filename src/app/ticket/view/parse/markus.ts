@@ -1,7 +1,7 @@
 import { DateTime, DateTimeOptions } from 'luxon';
-import assert from 'node:assert';
-import { PDFDocumentProxy } from 'pdfjs-dist';
-import { TextItem } from 'pdfjs-dist/types//src/display/api';
+import type { PDFDocumentProxy } from 'pdfjs-dist';
+import type { TextItem } from 'pdfjs-dist/types/src/display/api';
+import { assert } from 'ts-essentials';
 import { Ticket, TicketInvoice } from '../tickets.model';
 
 const dateTimeOptions: DateTimeOptions = { zone: 'Europe/Riga', locale: 'lv' };

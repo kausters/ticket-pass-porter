@@ -2,6 +2,8 @@
 
 import { TicketInvoice } from '../tickets.model';
 
-export async function parse(): Promise<TicketInvoice> {
+export async function parse(file: File): Promise<TicketInvoice> {
+	console.log(file);
+
 	return {} as TicketInvoice;
 }
