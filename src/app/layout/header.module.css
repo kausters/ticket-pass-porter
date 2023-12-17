@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    align-items: center;
+    margin-block: 2rem;
+    gap: 2rem;
+}
+
+.logo {
+    width: 8rem;
+    height: 8rem;
+}
+
+.title {
+    color: #fff;
+    font-size: 3rem;
+}
