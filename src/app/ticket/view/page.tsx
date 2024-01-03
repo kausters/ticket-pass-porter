@@ -1,25 +1,27 @@
 'use client';
 
-import { use } from 'react';
+import { useEffect, useState } from 'react';
 import { useTicketUpload } from '../ticket-upload-context';
-import { parse as parseClient } from './parse/client';
-
-async function parse(file?: File) {
-	if (!file) return null;
-
-	return await parseClient(file);
-}
+import { parse as parseServer } from './parse/server';
+import { TicketInvoice } from './tickets.model';
 
 export default function Page() {
 	const { ticketFile } = useTicketUpload();
-	const invoice = use(parse(ticketFile));
+	const [invoice, setInvoice] = useState<TicketInvoice | null>(null);
 
-	const data = JSON.stringify(invoice, null, 2);
+	useEffect(() => {
+		const updateInvoice = async () => {
+			const updatedInvoice = await parseServer();
+			setInvoice(updatedInvoice);
+		};
+
+		updateInvoice();
+	}, []);
 
 	return (
 		<div>
 			<h1>PDF data</h1>
-			<p>{data}</p>
+			<p>{JSON.stringify(invoice, null, 2)}</p>
 		</div>
 	);
 }
