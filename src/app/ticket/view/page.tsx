@@ -2,17 +2,21 @@
 
 import { useEffect, useState } from 'react';
 import { useTicketUpload } from '../ticket-upload-context';
-import { parse as parseServer } from './parse/server';
+import { parse as parseClient } from './parse/client';
 import { TicketInvoice } from './tickets.model';
 
 export default function Page() {
 	const { ticketFile } = useTicketUpload();
-	const [invoice, setInvoice] = useState<TicketInvoice | null>(null);
+	const [invoice, setInvoice] = useState<TicketInvoice>();
 
 	useEffect(() => {
 		const updateInvoice = async () => {
-			const updatedInvoice = await parseServer();
-			setInvoice(updatedInvoice);
+			if (ticketFile) {
+				const updatedInvoice = await parseClient(ticketFile);
+				setInvoice(updatedInvoice);
+			} else {
+				setInvoice(undefined);
+			}
 		};
 
 		updateInvoice();
