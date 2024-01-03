@@ -6,23 +6,21 @@ import {
 	parse as parseMarkusTicket,
 } from './markus';
 
-async function SetupPdfJs(): Promise<
-	typeof import('pdfjs-dist/legacy/build/pdf.mjs')
-> {
-	return new Promise((resolve) => {
-		return Promise.all([
+const PdfJs: Promise<typeof import('pdfjs-dist')> = new Promise(
+	async (resolve) => {
+		let [Pdf, PdfWorker] = await Promise.all([
 			import('pdfjs-dist/legacy/build/pdf.mjs'),
 			// @ts-expect-error
 			import('pdfjs-dist/legacy/build/pdf.worker.mjs'),
-		]).then(([Pdf, PdfWorker]) => {
-			Pdf.GlobalWorkerOptions.workerSrc = PdfWorker;
-			resolve(Pdf);
-		});
-	});
-}
+		]);
+
+		Pdf.GlobalWorkerOptions.workerSrc = PdfWorker;
+		resolve(Pdf);
+	},
+);
 
 export async function parse(file: File): Promise<TicketInvoice> {
-	const { getDocument } = await SetupPdfJs();
+	const { getDocument } = await PdfJs;
 
 	const arrayBuffer = await file.arrayBuffer();
 	const pdf = await getDocument(arrayBuffer).promise;
