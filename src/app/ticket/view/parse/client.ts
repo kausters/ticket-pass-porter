@@ -10,7 +10,6 @@ const PdfJs: Promise<typeof import('pdfjs-dist')> = new Promise(
 	async (resolve) => {
 		let [Pdf, PdfWorker] = await Promise.all([
 			import('pdfjs-dist/legacy/build/pdf.mjs'),
-			// @ts-expect-error
 			import('pdfjs-dist/legacy/build/pdf.worker.mjs'),
 		]);
 
