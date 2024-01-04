@@ -6,15 +6,26 @@ import { useEffect, useState } from 'react';
 import { useTicketUpload } from '../ticket-upload-context';
 import { parse as parseClient } from './parse/client';
 import { parse as parseServer } from './parse/server';
+import Ticket from './ticket/ticket';
 import { TicketInvoice } from './tickets.model';
 
 export default function Page() {
 	const invoice = useInvoice();
 
+	if (!invoice)
+		return (
+			<div>
+				<p>No invoice.</p>
+			</div>
+		);
+
 	return (
 		<div>
-			<h1>PDF data</h1>
-			<p>{JSON.stringify(invoice, null, 2)}</p>
+			<h1>Invoice #{invoice.id}</h1>
+
+			{invoice.tickets.map((ticket) => (
+				<Ticket key={ticket.id} data={ticket} />
+			))}
 		</div>
 	);
 }
