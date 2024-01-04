@@ -25,8 +25,9 @@ const ticket: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 				</div>
 			</div>
 
-			<p>name: {data.name}</p>
-			<p>rating: {data.rating}</p>
+			<h3 className={styles.name}>{data.name}</h3>
+			<small className={styles.rating}>{data.rating}</small>
+
 			<p>row: {data.row}</p>
 			<p>seat: {data.seat}</p>
 			<p>start: {data.start}</p>
