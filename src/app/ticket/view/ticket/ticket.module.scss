@@ -2,7 +2,10 @@
 	display: block;
 	width: 440px;
 	padding: 2rem 2rem 1rem;
-	border: 1px dotted currentColor;
+
+	// Using light colors for the ticket so we can use default QR colors. Might change later.
+	background-color: #fff;
+	color: #000;
 }
 
 .top {
