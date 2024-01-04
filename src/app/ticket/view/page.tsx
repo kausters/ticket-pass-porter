@@ -9,27 +9,7 @@ import { parse as parseServer } from './parse/server';
 import { TicketInvoice } from './tickets.model';
 
 export default function Page() {
-	const { ticketFile } = useTicketUpload();
-	const [invoice, setInvoice] = useState<TicketInvoice>();
-
-	const searchParams = useSearchParams();
-
-	useEffect(() => {
-		const updateInvoice = async () => {
-			if (ticketFile) {
-				const updatedInvoice = await parseClient(ticketFile);
-				setInvoice(updatedInvoice);
-			} else if (searchParams.has('id')) {
-				const ticketId = searchParams.get('id')!;
-				const updatedInvoice = await parseServer(ticketId);
-				setInvoice(updatedInvoice);
-			} else {
-				setInvoice(undefined);
-			}
-		};
-
-		updateInvoice();
-	}, []);
+	const invoice = useInvoice();
 
 	return (
 		<div>
@@ -37,4 +17,32 @@ export default function Page() {
 			<p>{JSON.stringify(invoice, null, 2)}</p>
 		</div>
 	);
+}
+
+function useInvoice() {
+	const { ticketFile } = useTicketUpload();
+	const searchParams = useSearchParams();
+
+	const [invoice, setInvoice] = useState<TicketInvoice>();
+
+	useEffect(() => {
+		async function updateInvoice() {
+			if (ticketFile) {
+				const updatedInvoice = await parseClient(ticketFile);
+				return setInvoice(updatedInvoice);
+			}
+
+			if (searchParams.has('id')) {
+				const ticketId = searchParams.get('id')!;
+				const updatedInvoice = await parseServer(ticketId);
+				return setInvoice(updatedInvoice);
+			}
+
+			setInvoice(undefined);
+		}
+
+		updateInvoice();
+	}, []);
+
+	return invoice;
 }
