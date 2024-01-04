@@ -93,8 +93,8 @@ function parseTicket(data: string[]): Ticket {
 		rating: data[5],
 		row: parseInt(data[10], 10),
 		seat: parseInt(data[11], 10),
-		purchased: getTicketPurchased(data).toString(),
-		start: getTicketStart(data).toString(),
+		purchased: getTicketPurchased(data).toISO()!,
+		start: getTicketStart(data).toISO()!,
 		price: getTicketPrice(data),
 		detail: getTicketDetail(data),
 	};
@@ -109,7 +109,7 @@ function getTicketPurchased(data: string[]): DateTime {
 
 function getTicketStart(data: string[]): DateTime {
 	const [hour, minute] = data[12].split(':').map((str) => parseInt(str, 10));
-	const [month, day] = data[13].split('.').map((str) => parseInt(str, 10));
+	const [day, month] = data[13].split('.').map((str) => parseInt(str, 10));
 
 	// We don't know the event start year, we'll start with the purchase year and fix it after constructing
 	const purchased = getTicketPurchased(data);
