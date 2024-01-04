@@ -1,12 +1,15 @@
 import { Encoder, ErrorCorrectionLevel, QRAlphanumeric } from '@nuintun/qrcode';
 import { FunctionComponent } from 'react';
+import styles from './qr.module.scss';
+
+const QR_WIDTH = 150;
 
 const Qr: FunctionComponent<{ data: string }> = ({ data }) => {
 	const qrCode = useQrCode(data);
-	return <img src={qrCode} alt={data} />;
+	return (
+		<img src={qrCode} alt={data} className={styles.image} width={QR_WIDTH} />
+	);
 };
-
-export default Qr;
 
 function useQrCode(data: string) {
 	const encoder = new Encoder({
@@ -17,5 +20,8 @@ function useQrCode(data: string) {
 	encoder.write(new QRAlphanumeric(data));
 	encoder.make();
 
-	return encoder.toDataURL(150 / 21, 0);
+	const moduleSize = QR_WIDTH / encoder.getMatrixSize();
+	return encoder.toDataURL(moduleSize * devicePixelRatio, 0);
 }
+
+export default Qr;
