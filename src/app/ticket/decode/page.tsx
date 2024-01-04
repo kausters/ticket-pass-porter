@@ -1,6 +1,9 @@
 'use client';
 
+import { Decoder } from '@nuintun/qrcode';
 import { FunctionComponent, useState } from 'react';
+
+const decoder = new Decoder();
 
 const Decode = () => {
 	const [file, setFile] = useState<File>();
@@ -26,7 +29,31 @@ const Decode = () => {
 };
 
 const Result: FunctionComponent<{ file: File }> = ({ file }) => {
-	return <div>{file.name}</div>;
+	const [data, setData] = useState<string>();
+
+	const localUrl = URL.createObjectURL(file);
+	decoder
+		.scan(localUrl)
+		.then((result) => {
+			console.log(result);
+			setData(JSON.stringify(result));
+		})
+		.finally(() => {
+			URL.revokeObjectURL(localUrl);
+		});
+
+	return (
+		<pre
+			style={{
+				whiteSpace: 'pre-wrap',
+				marginTop: '1rem',
+				fontSize: '1rem',
+				lineHeight: '1.5rem',
+			}}
+		>
+			{data}
+		</pre>
+	);
 };
 
 export default Decode;
