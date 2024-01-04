@@ -1,5 +1,5 @@
-import QrCode, { QRCodeSegment } from 'qrcode';
-import { FunctionComponent, useState } from 'react';
+import { Encoder, ErrorCorrectionLevel, QRAlphanumeric } from '@nuintun/qrcode';
+import { FunctionComponent } from 'react';
 
 const Qr: FunctionComponent<{ data: string }> = ({ data }) => {
 	const qrCode = useQrCode(data);
@@ -9,16 +9,13 @@ const Qr: FunctionComponent<{ data: string }> = ({ data }) => {
 export default Qr;
 
 function useQrCode(data: string) {
-	const [qrCode, setQrCode] = useState<string>();
-
-	const segment: QRCodeSegment = { data, mode: 'alphanumeric' };
-
-	QrCode.toDataURL([segment], {
-		width: 150,
-		margin: 0,
-	}).then((url) => {
-		setQrCode(url);
+	const encoder = new Encoder({
+		version: 1,
+		errorCorrectionLevel: ErrorCorrectionLevel.L,
 	});
 
-	return qrCode;
+	encoder.write(new QRAlphanumeric(data));
+	encoder.make();
+
+	return encoder.toDataURL(150 / 21, 0);
 }
