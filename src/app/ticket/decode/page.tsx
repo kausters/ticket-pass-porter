@@ -6,6 +6,12 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import PdfJs from '../view/parse/pdf-js';
 import ops from './ops';
 
+interface Operation {
+	fn: number;
+	op: string;
+	arg: any;
+}
+
 const Decode = () => {
 	const [file, setFile] = useState<File>();
 
@@ -69,22 +75,32 @@ const opsNames = Object.entries(ops).reduce(
 );
 
 async function getImages(page: PDFPageProxy) {
+	const Pdf = await PdfJs;
 	const operators = await page.getOperatorList();
-	logOperators(operators);
 
-	return [];
+	const operations = getOperations(operators);
+	console.table(operations);
+
+	const args = operators.fnArray.reduce((acc, kind, i) => {
+		if (kind === Pdf.OPS.setDash) {
+			const arg = operators.argsArray[i];
+			console.log(i);
+			acc.push(arg);
+		}
+
+		return acc;
+	}, [] as any[]);
+
+	return args;
 }
 
-function logOperators(operators: PDFOperatorList) {
-	const operatorsData = [];
+function getOperations(operators: PDFOperatorList) {
+	const operations: Operation[] = [];
 	for (let i = 0; i < operators.fnArray.length; i++) {
 		const fn = operators.fnArray[i];
 		const op = opsNames[fn];
-
 		const arg = operators.argsArray[i];
-
-		operatorsData.push({ op, arg });
+		operations.push({ fn, op, arg });
 	}
-
-	console.log(operatorsData);
+	return operations;
 }
