@@ -1,8 +1,11 @@
+import { DateTime } from 'luxon';
 import { FunctionComponent } from 'react';
 import { Ticket } from '../tickets.model';
 import styles from './ticket.module.scss';
 
 const ticket: FunctionComponent<{ data: Ticket }> = ({ data }) => {
+	const start = DateTime.fromISO(data.start);
+
 	return (
 		<article className={styles.container}>
 			<div className={styles.top}>
@@ -28,9 +31,25 @@ const ticket: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 			<h3 className={styles.name}>{data.name}</h3>
 			<small className={styles.rating}>{data.rating}</small>
 
-			<p>row: {data.row}</p>
-			<p>seat: {data.seat}</p>
-			<p>start: {data.start}</p>
+			<table className={styles.visit}>
+				<thead>
+					<tr>
+						<th>Rinda</th>
+						<th>Vietas</th>
+						<th>Seansa laiks</th>
+						<th>Seansa datums</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{data.row}</td>
+						<td>{data.seat}</td>
+						<td>{start.toFormat('HH:mm')}</td>
+						<td>{start.toFormat('dd.MM')}</td>
+					</tr>
+				</tbody>
+			</table>
+
 			<p>purchased: {data.purchased}</p>
 			<p>price: {data.price}</p>
 			<p>detail: {data.detail}</p>

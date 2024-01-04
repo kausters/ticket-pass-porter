@@ -7,6 +7,7 @@
 
 .top {
 	display: flex;
+	column-gap: 1rem;
 }
 
 .topCode {
@@ -44,4 +45,26 @@
 .rating {
 	font-size: 0.75rem;
 	font-style: italic;
+}
+
+.visit {
+	width: 100%;
+	margin-block: 1rem;
+	border-spacing: 0;
+	text-align: center;
+
+	th, td {
+		width: 25%;
+		padding: 0.5rem;
+		border-bottom: 1px solid currentColor
+	}
+
+	th {
+		font-size: 0.5rem;
+	}
+
+	td {
+		font-size: 1.25rem;
+		font-weight: 700;
+	}
 }
