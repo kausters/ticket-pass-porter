@@ -57,7 +57,7 @@ const ticket: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 				<a href="https://www.forumcinemas.lv/" target="_blank" rel="noreferrer">
 					www.forumcinemas.lv
 				</a>
-				<p>{(data.price / 100).toFixed(2)} EUR</p>
+				<p>{currencyFormatter.format(data.price / 100)}</p>
 				<p>{purchased.toFormat('dd.MM.yyyy HH:mm')}</p>
 			</footer>
 		</article>
@@ -65,3 +65,8 @@ const ticket: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 };
 
 export default ticket;
+
+const currencyFormatter = new Intl.NumberFormat('lv-LV', {
+	style: 'currency',
+	currency: 'EUR',
+});
