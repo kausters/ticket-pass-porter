@@ -4,9 +4,20 @@ import styles from './ticket.module.scss';
 
 const ticket: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 	return (
-		<div className={styles.ticket}>
+		<article className={styles.container}>
 			<p>id: {data.id}</p>
-		</div>
+			<p>title: {data.type}</p>
+			<p>name: {data.name}</p>
+			<p>rating: {data.rating}</p>
+			<p>auditorium: {data.auditorium}</p>
+			<p>section: {data.section}</p>
+			<p>row: {data.row}</p>
+			<p>seat: {data.seat}</p>
+			<p>start: {data.start}</p>
+			<p>purchased: {data.purchased}</p>
+			<p>price: {data.price}</p>
+			<p>detail: {data.detail}</p>
+		</article>
 	);
 };
 
