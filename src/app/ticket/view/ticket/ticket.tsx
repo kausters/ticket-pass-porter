@@ -5,6 +5,7 @@ import styles from './ticket.module.scss';
 
 const ticket: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 	const start = DateTime.fromISO(data.start);
+	const purchased = DateTime.fromISO(data.purchased);
 
 	return (
 		<article className={styles.container}>
@@ -52,8 +53,13 @@ const ticket: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 
 			<p className={styles.detail}>{data.detail}</p>
 
-			<p>purchased: {data.purchased}</p>
-			<p>price: {data.price}</p>
+			<footer className={styles.footer}>
+				<a href="https://www.forumcinemas.lv/" target="_blank" rel="noreferrer">
+					www.forumcinemas.lv
+				</a>
+				<p>{(data.price / 100).toFixed(2)} EUR</p>
+				<p>{purchased.toFormat('dd.MM.yyyy HH:mm')}</p>
+			</footer>
 		</article>
 	);
 };
