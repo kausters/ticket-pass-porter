@@ -1,9 +1,10 @@
 'use client';
 
-import { Decoder } from '@nuintun/qrcode';
-import { FunctionComponent, useState } from 'react';
-
-const decoder = new Decoder();
+import type { PDFPageProxy } from 'pdfjs-dist';
+import type { PDFOperatorList } from 'pdfjs-dist/types/src/display/api';
+import { FunctionComponent, useEffect, useState } from 'react';
+import PdfJs from '../view/parse/pdf-js';
+import ops from './ops';
 
 const Decode = () => {
 	const [file, setFile] = useState<File>();
@@ -31,16 +32,17 @@ const Decode = () => {
 const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 	const [data, setData] = useState<string>();
 
-	const localUrl = URL.createObjectURL(file);
-	decoder
-		.scan(localUrl)
-		.then((result) => {
-			console.log(result);
-			setData(JSON.stringify(result));
-		})
-		.finally(() => {
-			URL.revokeObjectURL(localUrl);
-		});
+	useEffect(() => {
+		(async () => {
+			const Pdf = await PdfJs;
+
+			const document = await Pdf.getDocument(await file.arrayBuffer()).promise;
+			const page = await document.getPage(1);
+			const images = await getImages(page);
+
+			setData(JSON.stringify(images, null, 2));
+		})();
+	});
 
 	return (
 		<pre
@@ -57,3 +59,32 @@ const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 };
 
 export default Decode;
+
+const opsNames = Object.entries(ops).reduce(
+	(acc, [key, value]) => {
+		acc[value] = key;
+		return acc;
+	},
+	{} as Record<number, string>,
+);
+
+async function getImages(page: PDFPageProxy) {
+	const operators = await page.getOperatorList();
+	logOperators(operators);
+
+	return [];
+}
+
+function logOperators(operators: PDFOperatorList) {
+	const operatorsData = [];
+	for (let i = 0; i < operators.fnArray.length; i++) {
+		const fn = operators.fnArray[i];
+		const op = opsNames[fn];
+
+		const arg = operators.argsArray[i];
+
+		operatorsData.push({ op, arg });
+	}
+
+	console.log(operatorsData);
+}
