@@ -1,32 +1,22 @@
 import QrCode from 'qrcode';
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useState } from 'react';
 
 const Qr: FunctionComponent<{ data: string }> = ({ data }) => {
 	const qrCode = useQrCode(data);
-	return <div dangerouslySetInnerHTML={sanitizeSvg(qrCode)}></div>;
+	return <img src={qrCode} alt={data} />;
 };
 
 export default Qr;
 
 function useQrCode(data: string) {
-	const [qrCode, setQrCode] = useState<any>();
+	const [qrCode, setQrCode] = useState<string>();
 
-	useEffect(() => {
-		async function updateQrCode() {
-			const updatedQrCode = await QrCode.toString(data, {
-				width: 150,
-				margin: 0,
-			});
-
-			return setQrCode(updatedQrCode);
-		}
-
-		updateQrCode();
-	}, []);
+	QrCode.toDataURL(data, {
+		width: 150,
+		margin: 0,
+	}).then((url) => {
+		setQrCode(url);
+	});
 
 	return qrCode;
-}
-
-function sanitizeSvg(dirty: string) {
-	return { __html: dirty };
 }
