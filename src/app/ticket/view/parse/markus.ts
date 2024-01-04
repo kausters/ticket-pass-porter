@@ -93,8 +93,8 @@ function parseTicket(data: string[]): Ticket {
 		rating: data[5],
 		row: parseInt(data[10], 10),
 		seat: parseInt(data[11], 10),
-		purchased: getTicketPurchased(data),
-		start: getTicketStart(data),
+		purchased: getTicketPurchased(data).toString(),
+		start: getTicketStart(data).toString(),
 		price: getTicketPrice(data),
 		detail: getTicketDetail(data),
 	};

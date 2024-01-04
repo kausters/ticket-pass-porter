@@ -1,5 +1,3 @@
-import { DateTime } from 'luxon';
-
 export interface TicketInvoice {
 	id: string;
 	tickets: Ticket[];
@@ -16,8 +14,8 @@ export interface Ticket {
 	row: number;
 	seat: number;
 
-	start: DateTime;
-	purchased: DateTime;
+	start: string;
+	purchased: string;
 	price: number;
 	detail: string;
 }

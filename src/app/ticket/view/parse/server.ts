@@ -16,8 +16,7 @@ export async function parse(id: string): Promise<TicketInvoice> {
 	const pdf = await getDocument(pdfPath).promise;
 
 	if (await isMarkusTicket(pdf)) {
-		const ticket = await parseMarkusTicket(pdf);
-		return JSON.parse(JSON.stringify(ticket));
+		return parseMarkusTicket(pdf);
 	}
 
 	throw new Error('Invalid ticket');
