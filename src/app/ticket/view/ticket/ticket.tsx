@@ -5,12 +5,28 @@ import styles from './ticket.module.scss';
 const ticket: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 	return (
 		<article className={styles.container}>
-			<p>id: {data.id}</p>
-			<p>title: {data.type}</p>
+			<div className={styles.top}>
+				<div className={styles.topLeft}>
+					<h2>Biļete</h2>
+
+					<p className={styles.auditorium}>{data.auditorium}</p>
+					<p className={styles.section}>{data.section}</p>
+					<p className={styles.type}>{data.type}</p>
+				</div>
+
+				<div className={styles.topCode}>
+					<img
+						src="https://via.placeholder.com/150"
+						width={150}
+						height={150}
+						alt={data.id}
+					/>
+					<small className={styles.id}>{data.id}</small>
+				</div>
+			</div>
+
 			<p>name: {data.name}</p>
 			<p>rating: {data.rating}</p>
-			<p>auditorium: {data.auditorium}</p>
-			<p>section: {data.section}</p>
 			<p>row: {data.row}</p>
 			<p>seat: {data.seat}</p>
 			<p>start: {data.start}</p>

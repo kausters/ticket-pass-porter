@@ -1,3 +1,37 @@
 .container {
-  display: block;
+	display: block;
+	width: 440px;
+	padding: 2rem 2rem 1rem;
+	border: 1px dotted currentColor;
+}
+
+.top {
+	display: flex;
+}
+
+.topCode {
+	flex-shrink: 0;
+	width: 150px;
+	text-align: center;
+}
+
+.topLeft {
+	flex-grow: 1;
+}
+
+.id {
+	font-size: 0.75rem;
+}
+
+.auditorium {
+	font-weight: 700;
+}
+
+.section {
+	font-style: italic;
+}
+
+.type {
+	font-weight: 700;
+	font-style: italic;
 }
