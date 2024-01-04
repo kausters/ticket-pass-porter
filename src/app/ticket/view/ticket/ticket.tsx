@@ -50,9 +50,10 @@ const ticket: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 				</tbody>
 			</table>
 
+			<p className={styles.detail}>{data.detail}</p>
+
 			<p>purchased: {data.purchased}</p>
 			<p>price: {data.price}</p>
-			<p>detail: {data.detail}</p>
 		</article>
 	);
 };
