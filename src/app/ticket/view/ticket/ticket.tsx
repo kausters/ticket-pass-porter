@@ -1,9 +1,10 @@
 import { DateTime } from 'luxon';
 import { FunctionComponent } from 'react';
-import { Ticket } from '../tickets.model';
+import { Ticket as TicketData } from '../tickets.model';
+import Qr from './qr';
 import styles from './ticket.module.scss';
 
-const ticket: FunctionComponent<{ data: Ticket }> = ({ data }) => {
+const Ticket: FunctionComponent<{ data: TicketData }> = ({ data }) => {
 	const start = DateTime.fromISO(data.start);
 	const purchased = DateTime.fromISO(data.purchased);
 
@@ -19,12 +20,7 @@ const ticket: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 				</div>
 
 				<div className={styles.topCode}>
-					<img
-						src="https://via.placeholder.com/150"
-						width={150}
-						height={150}
-						alt={data.id}
-					/>
+					<Qr data={data.id}></Qr>
 					<p className={styles.id}>{data.id}</p>
 				</div>
 			</div>
@@ -64,7 +60,7 @@ const ticket: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 	);
 };
 
-export default ticket;
+export default Ticket;
 
 const currencyFormatter = new Intl.NumberFormat('lv-LV', {
 	style: 'currency',
