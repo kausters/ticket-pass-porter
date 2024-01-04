@@ -10,7 +10,7 @@ const ticket: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 		<article className={styles.container}>
 			<div className={styles.top}>
 				<div className={styles.topLeft}>
-					<h2>Biļete</h2>
+					<h2 className={styles.title}>Biļete</h2>
 
 					<p className={styles.auditorium}>{data.auditorium}</p>
 					<p className={styles.section}>{data.section}</p>
@@ -24,12 +24,12 @@ const ticket: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 						height={150}
 						alt={data.id}
 					/>
-					<small className={styles.id}>{data.id}</small>
+					<p className={styles.id}>{data.id}</p>
 				</div>
 			</div>
 
 			<h3 className={styles.name}>{data.name}</h3>
-			<small className={styles.rating}>{data.rating}</small>
+			<p className={styles.rating}>{data.rating}</p>
 
 			<table className={styles.visit}>
 				<thead>
