@@ -1,5 +1,6 @@
 'use client';
 
+import { Decoder } from '@nuintun/qrcode';
 import type { PDFPageProxy } from 'pdfjs-dist';
 import type { PDFOperatorList } from 'pdfjs-dist/types/src/display/api';
 import { FunctionComponent, useEffect, useState } from 'react';
@@ -11,6 +12,8 @@ interface Operation {
 	op: string;
 	arg: any;
 }
+
+const decoder = new Decoder();
 
 const Decode = () => {
 	const [file, setFile] = useState<File>();
@@ -40,13 +43,21 @@ const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 
 	useEffect(() => {
 		(async () => {
-			const Pdf = await PdfJs;
+			if (file.type === 'application/pdf') {
+				const Pdf = await PdfJs;
+				const buffer = await file.arrayBuffer();
+				const document = await Pdf.getDocument(buffer).promise;
+				const page = await document.getPage(1);
+				const images = await getDashedLines(page);
+				setData(JSON.stringify(images, null, 2));
+			}
 
-			const document = await Pdf.getDocument(await file.arrayBuffer()).promise;
-			const page = await document.getPage(1);
-			const images = await getImages(page);
-
-			setData(JSON.stringify(images, null, 2));
+			if (file.type === 'image/png') {
+				const url = URL.createObjectURL(file);
+				const result = await decoder.scan(url);
+				URL.revokeObjectURL(url);
+				setData(JSON.stringify(result, null, 2));
+			}
 		})();
 	});
 
@@ -74,20 +85,15 @@ const opsNames = Object.entries(ops).reduce(
 	{} as Record<number, string>,
 );
 
-async function getImages(page: PDFPageProxy) {
+async function getDashedLines(page: PDFPageProxy) {
 	const operators = await page.getOperatorList();
-
 	const operations = getOperations(operators);
-	console.table(operations);
-
-	const dashedLineOps = findArgsForSequence(operations, [
+	return findArgsForSequence(operations, [
 		ops.setLineWidth,
 		ops.setDash,
 		ops.setStrokeRGBColor,
 		ops.constructPath,
 	]);
-
-	console.log(dashedLineOps);
 }
 
 function getOperations(operators: PDFOperatorList) {
