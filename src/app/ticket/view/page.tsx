@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { useTicketUpload } from '../ticket-upload-context';
+import styles from './page.module.scss';
 import { parse as parseClient } from './parse/client';
 import { parse as parseServer } from './parse/server';
 import Ticket from './ticket/ticket';
@@ -23,9 +24,13 @@ export default function Page() {
 		<div>
 			<h1>Invoice #{invoice.id}</h1>
 
-			{invoice.tickets.map((ticket) => (
-				<Ticket key={ticket.id} data={ticket} />
-			))}
+			<ul className={styles.tickets}>
+				{invoice.tickets.map((ticket) => (
+					<li key={ticket.id}>
+						<Ticket data={ticket} />
+					</li>
+				))}
+			</ul>
 		</div>
 	);
 }
