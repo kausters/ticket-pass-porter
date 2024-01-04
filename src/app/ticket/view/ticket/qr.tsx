@@ -1,4 +1,4 @@
-import QrCode from 'qrcode';
+import QrCode, { QRCodeSegment } from 'qrcode';
 import { FunctionComponent, useState } from 'react';
 
 const Qr: FunctionComponent<{ data: string }> = ({ data }) => {
@@ -11,7 +11,9 @@ export default Qr;
 function useQrCode(data: string) {
 	const [qrCode, setQrCode] = useState<string>();
 
-	QrCode.toDataURL(data, {
+	const segment: QRCodeSegment = { data, mode: 'alphanumeric' };
+
+	QrCode.toDataURL([segment], {
 		width: 150,
 		margin: 0,
 	}).then((url) => {
