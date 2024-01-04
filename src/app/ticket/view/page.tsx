@@ -41,23 +41,20 @@ function useInvoice() {
 
 	const [invoice, setInvoice] = useState<TicketInvoice>();
 
+	// Parsing uploaded ticket is done client-side, so we just do it and update the state after
+	if (ticketFile) {
+		parseClient(ticketFile).then(setInvoice);
+	}
+
+	// Parsing ticket by ID is done server-side, so we declare an effect to do it
 	useEffect(() => {
-		async function updateInvoice() {
-			if (ticketFile) {
-				const updatedInvoice = await parseClient(ticketFile);
-				return setInvoice(updatedInvoice);
-			}
+		(async () => {
+			const ticketId = searchParams.get('id');
+			if (!ticketId) return;
 
-			if (searchParams.has('id')) {
-				const ticketId = searchParams.get('id')!;
-				const updatedInvoice = await parseServer(ticketId);
-				return setInvoice(updatedInvoice);
-			}
-
-			setInvoice(undefined);
-		}
-
-		updateInvoice();
+			const invoice = await parseServer(ticketId);
+			setInvoice(invoice);
+		})();
 	}, []);
 
 	return invoice;
