@@ -85,7 +85,7 @@ function getTicketIndices(data: string[]): { start: number; end: number }[] {
 
 function parseTicket(data: string[]): Ticket {
 	return {
-		id: data[0],
+		id: getTicketId(data),
 		auditorium: data[1],
 		section: data[2],
 		name: data[3],
@@ -98,6 +98,23 @@ function parseTicket(data: string[]): Ticket {
 		price: getTicketPrice(data),
 		detail: getTicketDetail(data),
 	};
+}
+
+function getTicketId(data: string[]): string {
+	const idLength = 11;
+	const id = data[0];
+
+	/* If the ID is shorter than the expected length, it must have ended with
+	a space character (valid alphanumeric) and was trimmed by the PDF reader.
+	Unfortunately, that'll make for an invalid ID and a broken QR code, so we
+	have to re-pad the end of the ID with spaces to make it valid again. If we
+	could actually read the QR off the ticket, we wouldn't have to do this. */
+
+	if (id.length < idLength) {
+		return id.padEnd(idLength, ' ');
+	} else {
+		return id;
+	}
 }
 
 function getTicketPurchased(data: string[]): DateTime {
