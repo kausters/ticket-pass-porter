@@ -3,15 +3,9 @@
 import { Decoder } from '@nuintun/qrcode';
 import type { PDFPageProxy } from 'pdfjs-dist';
 import type { PDFOperatorList } from 'pdfjs-dist/types/src/display/api';
-import {
-	FunctionComponent,
-	RefObject,
-	useEffect,
-	useRef,
-	useState,
-} from 'react';
-import { assert } from 'ts-essentials';
+import { FunctionComponent, useEffect, useState } from 'react';
 import PdfJs from '../view/parse/pdf-js';
+import { getQrCodes } from './detect';
 import ops from './ops';
 
 interface Operation {
@@ -47,7 +41,6 @@ const Decode = () => {
 
 const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 	const [data, setData] = useState<string>();
-	const canvasRef = useRef<HTMLCanvasElement>(null);
 
 	useEffect(() => {
 		(async () => {
@@ -56,8 +49,9 @@ const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 				const buffer = await file.arrayBuffer();
 				const document = await Pdf.getDocument(buffer).promise;
 				const page = await document.getPage(1);
-				const images = await getQrCodes(page, canvasRef);
-				setData(JSON.stringify(images, null, 2));
+
+				const codes = await getQrCodes(page);
+				setData(JSON.stringify(codes, null, 2));
 			}
 
 			if (file.type === 'image/png') {
@@ -71,7 +65,6 @@ const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 
 	return (
 		<>
-			<canvas ref={canvasRef}></canvas>
 			<pre
 				style={{
 					whiteSpace: 'pre-wrap',
@@ -95,38 +88,6 @@ const opsNames = Object.entries(ops).reduce(
 	},
 	{} as Record<number, string>,
 );
-
-async function getQrCodes(
-	page: PDFPageProxy,
-	canvasRef: RefObject<HTMLCanvasElement>,
-) {
-	const canvas = canvasRef.current;
-	assert(canvas, 'Canvas ref is not set');
-
-	const canvasContext = canvas.getContext('2d');
-	assert(canvasContext, 'Canvas context is not set');
-
-	const viewport = page.getViewport({ scale: 1 });
-	console.log(viewport);
-	canvas.height = viewport.height;
-	canvas.width = viewport.width;
-
-	await page.render({ canvasContext, viewport }).promise;
-
-	const imageData = canvas
-		.getContext('2d')!
-		.getImageData(0, 0, canvas.width, canvas.height);
-
-	const decoder = new Decoder();
-	const decode = decoder.decode(
-		imageData.data,
-		imageData.width,
-		imageData.height,
-	);
-	console.log(decode);
-
-	return [];
-}
 
 async function getDashedLines(page: PDFPageProxy) {
 	const operators = await page.getOperatorList();
