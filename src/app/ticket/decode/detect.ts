@@ -68,10 +68,29 @@ function getRectImage(canvas: HTMLCanvasElement, rect: Rect) {
 	const context = canvas.getContext('2d');
 	assert(context, 'Canvas context is null');
 
-	return context.getImageData(rect.x, rect.y, rect.width, rect.height);
+	const { x, y, width, height } = rect;
+	const imageData = context.getImageData(x, y, width, height);
+
+	drawImage(imageData);
+	return imageData;
 }
 
 function decodeImage(image: ImageData) {
 	const decoder = new Decoder();
 	return decoder.decode(image.data, image.width, image.height);
+}
+
+function drawImage(imageData: ImageData) {
+	const canvas = document.createElement('canvas');
+	canvas.width = imageData.width;
+	canvas.height = imageData.height;
+
+	const context = canvas.getContext('2d');
+	assert(context, 'Canvas context is null');
+
+	context.putImageData(imageData as any, 0, 0);
+
+	const image = new Image();
+	image.src = canvas.toDataURL();
+	document.body.appendChild(image);
 }
