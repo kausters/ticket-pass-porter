@@ -32,6 +32,7 @@ const Decode = () => {
 
 const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 	const [data, setData] = useState<string>();
+	const [images, setImages] = useState<string[]>();
 
 	useEffect(() => {
 		(async () => {
@@ -41,7 +42,7 @@ const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 				const document = await Pdf.getDocument(buffer).promise;
 				const page = await document.getPage(1);
 
-				const codes = await getTicketImageData(page);
+				const codes = await getTicketImageData(page, setImages);
 				setData(JSON.stringify(codes, null, 2));
 			}
 
@@ -66,6 +67,14 @@ const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 			>
 				{data}
 			</pre>
+
+			{images && (
+				<div>
+					{images.map((image, index) => (
+						<img key={index} src={image} />
+					))}
+				</div>
+			)}
 		</>
 	);
 };
