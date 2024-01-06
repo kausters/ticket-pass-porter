@@ -1,4 +1,12 @@
-const ops = {
+import { PDFOperatorList } from 'pdfjs-dist/types/src/display/api';
+
+export interface Operation {
+	fn: number;
+	op: string;
+	arg: any;
+}
+
+export const ops = {
 	dependency: 1,
 	setLineWidth: 2,
 	setLineCap: 3,
@@ -89,4 +97,21 @@ const ops = {
 	constructPath: 91,
 };
 
-export default ops;
+export const opsNames = Object.entries(ops).reduce(
+	(acc, [key, value]) => {
+		acc[value] = key;
+		return acc;
+	},
+	{} as Record<number, string>,
+);
+
+export function getOperations(operators: PDFOperatorList) {
+	const operations: Operation[] = [];
+	for (let i = 0; i < operators.fnArray.length; i++) {
+		const fn = operators.fnArray[i];
+		const op = opsNames[fn];
+		const arg = operators.argsArray[i];
+		operations.push({ fn, op, arg });
+	}
+	return operations;
+}

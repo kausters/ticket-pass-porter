@@ -1,18 +1,9 @@
 'use client';
 
 import { Decoder } from '@nuintun/qrcode';
-import type { PDFPageProxy } from 'pdfjs-dist';
-import type { PDFOperatorList } from 'pdfjs-dist/types/src/display/api';
 import { FunctionComponent, useEffect, useState } from 'react';
 import PdfJs from '../view/parse/pdf-js';
 import { getQrCodes } from './detect';
-import ops from './ops';
-
-interface Operation {
-	fn: number;
-	op: string;
-	arg: any;
-}
 
 const decoder = new Decoder();
 
@@ -80,58 +71,3 @@ const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 };
 
 export default Decode;
-
-const opsNames = Object.entries(ops).reduce(
-	(acc, [key, value]) => {
-		acc[value] = key;
-		return acc;
-	},
-	{} as Record<number, string>,
-);
-
-async function getDashedLines(page: PDFPageProxy) {
-	const operators = await page.getOperatorList();
-	const operations = getOperations(operators);
-	return findArgsForSequence(operations, [
-		ops.setLineWidth,
-		ops.setDash,
-		ops.setStrokeRGBColor,
-		ops.constructPath,
-	]);
-}
-
-function getOperations(operators: PDFOperatorList) {
-	const operations: Operation[] = [];
-	for (let i = 0; i < operators.fnArray.length; i++) {
-		const fn = operators.fnArray[i];
-		const op = opsNames[fn];
-		const arg = operators.argsArray[i];
-		operations.push({ fn, op, arg });
-	}
-	return operations;
-}
-
-function findArgsForSequence(
-	operations: Operation[],
-	sequence: Operation['fn'][],
-) {
-	let seqIndex = 0;
-	let matches: Operation['arg'][] = [];
-
-	for (let i = 0; i < operations.length; i++) {
-		if (operations[i].fn === sequence[seqIndex]) {
-			seqIndex++;
-			if (seqIndex === sequence.length) {
-				// Add args to the result array
-				matches.push(operations[i].arg);
-
-				// Reset sequence to search for next match
-				seqIndex = 0;
-			}
-		} else {
-			seqIndex = operations[i].fn === sequence[0] ? 1 : 0;
-		}
-	}
-
-	return matches;
-}
