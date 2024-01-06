@@ -3,7 +3,7 @@
 import { Decoder } from '@nuintun/qrcode';
 import { FunctionComponent, useEffect, useState } from 'react';
 import PdfJs from '../view/parse/pdf-js';
-import { getQrCodes } from './detect';
+import { getTicketImageData } from './split-tickets';
 
 const decoder = new Decoder();
 
@@ -41,7 +41,7 @@ const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 				const document = await Pdf.getDocument(buffer).promise;
 				const page = await document.getPage(1);
 
-				const codes = await getQrCodes(page);
+				const codes = await getTicketImageData(page);
 				setData(JSON.stringify(codes, null, 2));
 			}
 

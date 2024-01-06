@@ -1,14 +1,8 @@
 import { PDFPageProxy } from 'pdfjs-dist';
-import { getOperations, ops } from './ops';
-import { findArgsForSequence } from './utils';
+import { getTicketRects } from './ticket-rects';
 
-async function getDashedLines(page: PDFPageProxy) {
-	const operators = await page.getOperatorList();
-	const operations = getOperations(operators);
-	return findArgsForSequence(operations, [
-		ops.setLineWidth,
-		ops.setDash,
-		ops.setStrokeRGBColor,
-		ops.constructPath,
-	]);
+export async function getTicketImageData(page: PDFPageProxy) {
+	// 1. Find the rectangles of each ticket
+	const rects = await getTicketRects(page);
+	console.log(rects);
 }
