@@ -1,12 +1,6 @@
 import { PDFPageProxy } from 'pdfjs-dist';
 import { assert } from 'ts-essentials';
-
-interface Rect {
-	x: number;
-	y: number;
-	width: number;
-	height: number;
-}
+import { Rect } from '../view/parse/markus/scan/path.model';
 
 export async function getTicketImages(page: PDFPageProxy, rects: Rect[]) {
 	const canvas = document.createElement('canvas');

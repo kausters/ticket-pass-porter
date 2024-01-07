@@ -1,19 +1,10 @@
 import { PDFPageProxy } from 'pdfjs-dist';
+import { Line, Point } from '../view/parse/markus/scan/path.model';
 import { getOperations, ops } from './ops';
 
 type LineArgsOps = [typeof ops.moveTo, typeof ops.lineTo];
 type LineArgsCoords = [x1: number, y1: number, x2: number, y2: number];
 type LineOpArgs = [ops: LineArgsOps, coords: LineArgsCoords];
-
-interface Point {
-	x: number;
-	y: number;
-}
-
-interface Line {
-	start: Point;
-	end: Point;
-}
 
 export async function getTicketRects(page: PDFPageProxy) {
 	const operators = await page.getOperatorList();
