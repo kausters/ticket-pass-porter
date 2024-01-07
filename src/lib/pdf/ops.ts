@@ -1,10 +1,4 @@
-export interface Operation {
-	fn: number;
-	op: string;
-	args: any[];
-}
-
-export const ops = {
+export default {
 	dependency: 1,
 	setLineWidth: 2,
 	setLineCap: 3,
@@ -94,11 +88,3 @@ export const ops = {
 	paintSolidColorImageMask: 90,
 	constructPath: 91,
 };
-
-export const opsNames = Object.entries(ops).reduce(
-	(acc, [key, value]) => {
-		acc[value] = key;
-		return acc;
-	},
-	{} as Record<number, string>,
-);
