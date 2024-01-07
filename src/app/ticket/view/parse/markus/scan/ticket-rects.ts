@@ -1,6 +1,12 @@
 import { PDFPageProxy } from 'pdfjs-dist';
-import { getOperations, ops } from '../../../../decode/ops';
+import { PDFOperatorList } from 'pdfjs-dist/types/src/display/api';
+import { ops } from '../../../../decode/ops';
 import { Line, Point } from './path.model';
+
+interface Operation {
+	fn: number;
+	args: any[];
+}
 
 type LineArgsOps = [typeof ops.moveTo, typeof ops.lineTo];
 type LineArgsCoords = [x1: number, y1: number, x2: number, y2: number];
@@ -12,12 +18,22 @@ export async function getTicketRects(page: PDFPageProxy) {
 
 	const lines = operations
 		.filter((op) => op.fn === ops.constructPath)
-		.map((op) => op.arg)
+		.map((op) => op.args)
 		.filter(isLineOpArg)
 		.map(lineOpArgToLine);
 
 	const intersects = findIntersectingLines(lines);
 	return intersects.map(getRectFromLines);
+}
+
+function getOperations(operators: PDFOperatorList) {
+	const operations: Operation[] = [];
+	for (let i = 0; i < operators.fnArray.length; i++) {
+		const fn = operators.fnArray[i];
+		const args = operators.argsArray[i];
+		operations.push({ fn, args });
+	}
+	return operations;
 }
 
 function isLineOpArg(args: unknown[]): args is LineOpArgs {
