@@ -1,6 +1,6 @@
 import { PDFPageProxy } from 'pdfjs-dist';
 import { PDFOperatorList } from 'pdfjs-dist/types/src/display/api';
-import { ops } from '../../../../decode/ops';
+import { ops } from '../../../../../../lib/pdf/ops';
 import { Line, Point } from './path.model';
 
 interface Operation {

@@ -1,8 +1,8 @@
 'use client';
 
 import { FunctionComponent, useEffect, useState } from 'react';
+import PdfJs from '../../../lib/pdf/pdf-js';
 import { getTicketRects } from '../view/parse/markus/scan/ticket-rects';
-import PdfJs from '../view/parse/pdf-js';
 import { getCodes } from './scan-tickets';
 import { getTicketImages } from './ticket-images';
 import { arePreviewsEqual, getTicketPreviews } from './ticket-previews';

@@ -1,9 +1,7 @@
-import { PDFOperatorList } from 'pdfjs-dist/types/src/display/api';
-
 export interface Operation {
 	fn: number;
 	op: string;
-	arg: any;
+	args: any[];
 }
 
 export const ops = {
@@ -104,14 +102,3 @@ export const opsNames = Object.entries(ops).reduce(
 	},
 	{} as Record<number, string>,
 );
-
-export function getOperations(operators: PDFOperatorList) {
-	const operations: Operation[] = [];
-	for (let i = 0; i < operators.fnArray.length; i++) {
-		const fn = operators.fnArray[i];
-		const op = opsNames[fn];
-		const arg = operators.argsArray[i];
-		operations.push({ fn, op, arg });
-	}
-	return operations;
-}
