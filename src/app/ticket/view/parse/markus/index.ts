@@ -1,7 +1,7 @@
 import { PDFDocumentProxy } from 'pdfjs-dist';
 import { TicketInvoice } from '../../tickets.model';
-import read from './read';
-import scan from './scan';
+import { read } from './read';
+import { scan } from './scan';
 
 export { isValid } from './is-valid';
 

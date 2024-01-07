@@ -1,11 +1,11 @@
 'use client';
 
 import { FunctionComponent, useEffect, useState } from 'react';
+import { getTicketRects } from '../view/parse/markus/scan/ticket-rects';
 import PdfJs from '../view/parse/pdf-js';
 import { getCodes } from './scan-tickets';
 import { getTicketImages } from './ticket-images';
 import { arePreviewsEqual, getTicketPreviews } from './ticket-previews';
-import { getTicketRects } from './ticket-rects';
 
 const Decode = () => {
 	const [file, setFile] = useState<File>();

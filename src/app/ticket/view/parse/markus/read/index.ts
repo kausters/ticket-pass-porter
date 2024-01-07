@@ -4,7 +4,7 @@ import { TicketInvoice } from '../../../tickets.model';
 import { getInvoiceId } from './invoice';
 import { getTickets } from './tickets';
 
-async function read(page: PDFPageProxy): Promise<TicketInvoice> {
+export async function read(page: PDFPageProxy): Promise<TicketInvoice> {
 	const textContent = await page.getTextContent();
 
 	const text = textContent.items
@@ -17,5 +17,3 @@ async function read(page: PDFPageProxy): Promise<TicketInvoice> {
 		tickets: getTickets(text),
 	};
 }
-
-export default read;

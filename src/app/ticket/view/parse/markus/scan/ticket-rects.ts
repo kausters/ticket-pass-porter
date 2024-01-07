@@ -1,6 +1,6 @@
 import { PDFPageProxy } from 'pdfjs-dist';
-import { Line, Point } from '../view/parse/markus/scan/path.model';
-import { getOperations, ops } from './ops';
+import { getOperations, ops } from '../../../../decode/ops';
+import { Line, Point } from './path.model';
 
 type LineArgsOps = [typeof ops.moveTo, typeof ops.lineTo];
 type LineArgsCoords = [x1: number, y1: number, x2: number, y2: number];
