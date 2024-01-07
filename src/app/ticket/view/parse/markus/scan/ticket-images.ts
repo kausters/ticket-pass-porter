@@ -1,6 +1,6 @@
 import { PDFPageProxy } from 'pdfjs-dist';
 import { assert } from 'ts-essentials';
-import { Rect } from '../view/parse/markus/scan/path.model';
+import { Rect } from './path.model';
 
 export async function getTicketImages(page: PDFPageProxy, rects: Rect[]) {
 	const canvas = document.createElement('canvas');

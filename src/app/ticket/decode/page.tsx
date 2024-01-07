@@ -2,9 +2,9 @@
 
 import { FunctionComponent, useEffect, useState } from 'react';
 import PdfJs from '../../../lib/pdf/pdf-js';
+import { getTicketImages } from '../view/parse/markus/scan/ticket-images';
 import { getTicketRects } from '../view/parse/markus/scan/ticket-rects';
 import { getCodes } from './scan-tickets';
-import { getTicketImages } from './ticket-images';
 import { arePreviewsEqual, getTicketPreviews } from './ticket-previews';
 
 const Decode = () => {

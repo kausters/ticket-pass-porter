@@ -1,6 +1,6 @@
 import type { PDFPageProxy } from 'pdfjs-dist';
 import { getCodes } from '../../../../decode/scan-tickets';
-import { getTicketImages } from '../../../../decode/ticket-images';
+import { getTicketImages } from './ticket-images';
 import { getTicketRects } from './ticket-rects';
 
 export async function scan(
