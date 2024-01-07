@@ -6,26 +6,6 @@ import { Ticket, TicketInvoice } from '../../tickets.model';
 
 const dateTimeOptions: DateTimeOptions = { zone: 'Europe/Riga', locale: 'lv' };
 
-export async function isValid(pdf: PDFDocumentProxy): Promise<boolean> {
-	const metadata = await pdf.getMetadata();
-	const info = metadata.info as Record<string, unknown>;
-
-	const expect: Record<string, unknown> = {
-		Title: 'Event Tickets',
-		Author: 'MCS',
-		Subject: 'Tickets',
-		Creator: 'MARKUS Cinema System',
-	};
-
-	for (const key in expect) {
-		if (expect[key] !== info[key]) {
-			return false;
-		}
-	}
-
-	return true;
-}
-
 export async function read(pdf: PDFDocumentProxy): Promise<TicketInvoice> {
 	const page = await pdf.getPage(1);
 	const textContent = await page.getTextContent();
