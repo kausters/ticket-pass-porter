@@ -44,20 +44,5 @@ function getRectImage(rect: Rect, canvas: HTMLCanvasElement) {
 	assert(context, 'Canvas context is null');
 
 	const { x, y, width, height } = rect;
-	const imageData = context.getImageData(x, y, width, height);
-
-	const preview = getImageDataUrl(imageData);
-	return { imageData, preview };
-}
-
-function getImageDataUrl(imageData: ImageData) {
-	const imageCanvas = document.createElement('canvas');
-	imageCanvas.width = imageData.width;
-	imageCanvas.height = imageData.height;
-
-	const context = imageCanvas.getContext('2d');
-	assert(context, 'Canvas context is null');
-
-	context.putImageData(imageData, 0, 0);
-	return imageCanvas.toDataURL();
+	return context.getImageData(x, y, width, height);
 }

@@ -4,6 +4,7 @@ import { Decoder } from '@nuintun/qrcode';
 import { FunctionComponent, useEffect, useState } from 'react';
 import PdfJs from '../view/parse/pdf-js';
 import { getTicketImageData } from './split-tickets';
+import { arePreviewsEqual, getTicketPreviews } from './ticket-previews';
 
 const decoder = new Decoder();
 
@@ -32,7 +33,7 @@ const Decode = () => {
 
 const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 	const [data, setData] = useState<string>();
-	const [images, setImages] = useState<string[]>([]);
+	const [previews, setPreviews] = useState<string[]>([]);
 
 	useEffect(() => {
 		(async () => {
@@ -41,9 +42,16 @@ const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 				const buffer = await file.arrayBuffer();
 				const document = await Pdf.getDocument(buffer).promise;
 				const page = await document.getPage(1);
+				const images = await getTicketImageData(page);
 
-				const codes = await getTicketImageData(page, setImages);
-				setData(JSON.stringify(codes, null, 2));
+				setPreviews((oldPreviews) => {
+					const newPreviews = getTicketPreviews(images);
+					return arePreviewsEqual(oldPreviews, newPreviews)
+						? oldPreviews
+						: newPreviews;
+				});
+
+				setData(JSON.stringify({}, null, 2));
 			}
 		})();
 	});
@@ -61,9 +69,9 @@ const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 				{data}
 			</pre>
 
-			{images && (
+			{previews && (
 				<div>
-					{images.map((image, index) => (
+					{previews.map((image, index) => (
 						<img key={index} src={image} />
 					))}
 				</div>
