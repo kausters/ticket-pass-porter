@@ -1,6 +1,5 @@
-import { PDFPageProxy } from 'pdfjs-dist';
+import { OPS, type PDFPageProxy } from 'pdfjs-dist';
 import { PDFOperatorList } from 'pdfjs-dist/types/src/display/api';
-import { ops } from '../../../../../../lib/pdf/ops';
 import { Line, Point } from './path.model';
 
 interface Operation {
@@ -8,7 +7,7 @@ interface Operation {
 	args: any[];
 }
 
-type LineArgsOps = [typeof ops.moveTo, typeof ops.lineTo];
+type LineArgsOps = [typeof OPS.moveTo, typeof OPS.lineTo];
 type LineArgsCoords = [x1: number, y1: number, x2: number, y2: number];
 type LineOpArgs = [ops: LineArgsOps, coords: LineArgsCoords];
 
@@ -17,7 +16,7 @@ export async function getTicketRects(page: PDFPageProxy) {
 	const operations = getOperations(operators);
 
 	const lines = operations
-		.filter((op) => op.fn === ops.constructPath)
+		.filter((op) => op.fn === OPS.constructPath)
 		.map((op) => op.args)
 		.filter(isLineOpArg)
 		.map(lineOpArgToLine);
@@ -41,7 +40,7 @@ function isLineOpArg(args: unknown[]): args is LineOpArgs {
 	const [commands, coords] = args;
 
 	if (!Array.isArray(commands)) return false;
-	if (commands[0] !== ops.moveTo || commands[1] !== ops.lineTo) return false;
+	if (commands[0] !== OPS.moveTo || commands[1] !== OPS.lineTo) return false;
 
 	return !(!Array.isArray(coords) || coords.length !== 4);
 }
