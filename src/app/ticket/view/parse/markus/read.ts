@@ -2,7 +2,7 @@ import { DateTime, DateTimeOptions } from 'luxon';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import type { TextItem } from 'pdfjs-dist/types/src/display/api';
 import { assert } from 'ts-essentials';
-import { Ticket, TicketInvoice } from '../tickets.model';
+import { Ticket, TicketInvoice } from '../../tickets.model';
 
 const dateTimeOptions: DateTimeOptions = { zone: 'Europe/Riga', locale: 'lv' };
 
@@ -26,7 +26,7 @@ export async function isValid(pdf: PDFDocumentProxy): Promise<boolean> {
 	return true;
 }
 
-export async function parse(pdf: PDFDocumentProxy): Promise<TicketInvoice> {
+export async function read(pdf: PDFDocumentProxy): Promise<TicketInvoice> {
 	const page = await pdf.getPage(1);
 	const textContent = await page.getTextContent();
 
