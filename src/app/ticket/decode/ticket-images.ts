@@ -18,7 +18,7 @@ export async function getTicketImages(page: PDFPageProxy, rects: Rect[]) {
 }
 
 function renderPageToCanvas(page: PDFPageProxy, canvas: HTMLCanvasElement) {
-	const canvasContext = canvas.getContext('2d');
+	const canvasContext = canvas.getContext('2d', { willReadFrequently: true });
 	assert(canvasContext, 'Canvas context is null');
 
 	const viewport = page.getViewport({ scale: 1 });
