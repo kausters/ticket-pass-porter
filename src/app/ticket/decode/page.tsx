@@ -32,7 +32,7 @@ const Decode = () => {
 
 const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 	const [data, setData] = useState<string>();
-	const [images, setImages] = useState<string[]>();
+	const [images, setImages] = useState<string[]>([]);
 
 	useEffect(() => {
 		(async () => {
@@ -44,13 +44,6 @@ const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 
 				const codes = await getTicketImageData(page, setImages);
 				setData(JSON.stringify(codes, null, 2));
-			}
-
-			if (file.type === 'image/png') {
-				const url = URL.createObjectURL(file);
-				const result = await decoder.scan(url);
-				URL.revokeObjectURL(url);
-				setData(JSON.stringify(result, null, 2));
 			}
 		})();
 	});
