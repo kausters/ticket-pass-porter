@@ -1,12 +1,10 @@
 'use client';
 
-import { Decoder } from '@nuintun/qrcode';
 import { FunctionComponent, useEffect, useState } from 'react';
 import PdfJs from '../view/parse/pdf-js';
+import { getCodes } from './scan-tickets';
 import { getTicketImageData } from './split-tickets';
 import { arePreviewsEqual, getTicketPreviews } from './ticket-previews';
-
-const decoder = new Decoder();
 
 const Decode = () => {
 	const [file, setFile] = useState<File>();
@@ -42,7 +40,9 @@ const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 				const buffer = await file.arrayBuffer();
 				const document = await Pdf.getDocument(buffer).promise;
 				const page = await document.getPage(1);
+
 				const images = await getTicketImageData(page);
+				const codes = getCodes(images);
 
 				setPreviews((oldPreviews) => {
 					const newPreviews = getTicketPreviews(images);
@@ -51,7 +51,7 @@ const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 						: newPreviews;
 				});
 
-				setData(JSON.stringify({}, null, 2));
+				setData(JSON.stringify(codes, null, 2));
 			}
 		})();
 	});
