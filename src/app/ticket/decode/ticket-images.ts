@@ -12,7 +12,9 @@ export async function getTicketImages(page: PDFPageProxy, rects: Rect[]) {
 	const canvas = document.createElement('canvas');
 	await renderPageToCanvas(page, canvas);
 
-	return rects.map((rect) => getRectImage(canvas, rect));
+	return rects
+		.map((rect) => flipRect(rect, canvas.height))
+		.map((rect) => getRectImage(rect, canvas));
 }
 
 function renderPageToCanvas(page: PDFPageProxy, canvas: HTMLCanvasElement) {
@@ -31,7 +33,13 @@ function renderPageToCanvas(page: PDFPageProxy, canvas: HTMLCanvasElement) {
 	return page.render(renderOptions).promise;
 }
 
-function getRectImage(canvas: HTMLCanvasElement, rect: Rect) {
+function flipRect(rect: Rect, canvasHeight: number) {
+	/* PDFs have the origin at the bottom left, but canvas has it at the top left.
+	The rects are calculated against the PDF origin, so we need to flip them. */
+	return { ...rect, y: canvasHeight - rect.y - rect.height };
+}
+
+function getRectImage(rect: Rect, canvas: HTMLCanvasElement) {
 	const context = canvas.getContext('2d');
 	assert(context, 'Canvas context is null');
 

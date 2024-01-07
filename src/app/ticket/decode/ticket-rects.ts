@@ -26,9 +26,7 @@ export async function getTicketRects(page: PDFPageProxy) {
 		.map(lineOpArgToLine);
 
 	const intersects = findIntersectingLines(lines);
-	const rects = intersects.map(getRectFromLines);
-
-	return rects;
+	return intersects.map(getRectFromLines);
 }
 
 function isLineOpArg(args: unknown[]): args is LineOpArgs {
