@@ -1,5 +1,5 @@
 import type { PDFPageProxy } from 'pdfjs-dist';
-import { getCodes } from '../../../../decode/scan-tickets';
+import { getTicketCodes } from './ticket-codes';
 import { getTicketImages } from './ticket-images';
 import { getTicketRects } from './ticket-rects';
 
@@ -13,5 +13,5 @@ export async function scan(
 	const images = await getTicketImages(page, rects);
 
 	// 3. Read the QR code from each image
-	return getCodes(images);
+	return getTicketCodes(images);
 }
