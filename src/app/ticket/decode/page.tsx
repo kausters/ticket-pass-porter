@@ -3,8 +3,9 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 import PdfJs from '../view/parse/pdf-js';
 import { getCodes } from './scan-tickets';
-import { getTicketImageData } from './split-tickets';
+import { getTicketImages } from './ticket-images';
 import { arePreviewsEqual, getTicketPreviews } from './ticket-previews';
+import { getTicketRects } from './ticket-rects';
 
 const Decode = () => {
 	const [file, setFile] = useState<File>();
@@ -41,7 +42,8 @@ const Result: FunctionComponent<{ file: File }> = ({ file }) => {
 				const document = await Pdf.getDocument(buffer).promise;
 				const page = await document.getPage(1);
 
-				const images = await getTicketImageData(page);
+				const rects = await getTicketRects(page);
+				const images = await getTicketImages(page, rects);
 				const codes = getCodes(images);
 
 				setPreviews((oldPreviews) => {
