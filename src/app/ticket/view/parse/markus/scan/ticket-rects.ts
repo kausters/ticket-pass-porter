@@ -1,11 +1,5 @@
 import { OPS, type PDFPageProxy } from 'pdfjs-dist';
-import { PDFOperatorList } from 'pdfjs-dist/types/src/display/api';
 import { Line, Point } from './path.model';
-
-interface Operation {
-	fn: number;
-	args: any[];
-}
 
 type LineArgsOps = [typeof OPS.moveTo, typeof OPS.lineTo];
 type LineArgsCoords = [x1: number, y1: number, x2: number, y2: number];
@@ -13,11 +7,9 @@ type LineOpArgs = [ops: LineArgsOps, coords: LineArgsCoords];
 
 export async function getTicketRects(page: PDFPageProxy) {
 	const operators = await page.getOperatorList();
-	const operations = getOperations(operators);
 
-	const lines = operations
-		.filter((op) => op.fn === OPS.constructPath)
-		.map((op) => op.args)
+	const lines = operators.argsArray
+		.filter((args, index) => operators.fnArray[index] === OPS.constructPath)
 		.filter(isLineOpArg)
 		.map(lineOpArgToLine);
 
@@ -25,21 +17,11 @@ export async function getTicketRects(page: PDFPageProxy) {
 	return intersects.map(getRectFromLines);
 }
 
-function getOperations(operators: PDFOperatorList) {
-	const operations: Operation[] = [];
-	for (let i = 0; i < operators.fnArray.length; i++) {
-		const fn = operators.fnArray[i];
-		const args = operators.argsArray[i];
-		operations.push({ fn, args });
-	}
-	return operations;
-}
-
 function isLineOpArg(args: unknown[]): args is LineOpArgs {
 	if (args.length < 2) return false;
 	const [commands, coords] = args;
 
-	if (!Array.isArray(commands)) return false;
+	if (!Array.isArray(commands) || commands.length !== 2) return false;
 	if (commands[0] !== OPS.moveTo || commands[1] !== OPS.lineTo) return false;
 
 	return !(!Array.isArray(coords) || coords.length !== 4);
