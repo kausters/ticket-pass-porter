@@ -1,69 +1,10 @@
 import { DateTime, DateTimeOptions } from 'luxon';
-import type { PDFDocumentProxy } from 'pdfjs-dist';
-import type { TextItem } from 'pdfjs-dist/types/src/display/api';
 import { assert } from 'ts-essentials';
-import { Ticket, TicketInvoice } from '../../tickets.model';
+import { Ticket } from '../../../tickets.model';
 
 const dateTimeOptions: DateTimeOptions = { zone: 'Europe/Riga', locale: 'lv' };
 
-export async function read(pdf: PDFDocumentProxy): Promise<TicketInvoice> {
-	const page = await pdf.getPage(1);
-	const textContent = await page.getTextContent();
-
-	const text = textContent.items
-		.filter((item): item is TextItem => 'str' in item)
-		.map((item) => (item.hasEOL ? item.str + '\n' : item.str))
-		.filter((str) => str.trim().length > 0);
-
-	return {
-		id: getInvoiceId(text),
-		tickets: getTickets(text),
-	};
-}
-
-function getInvoiceId(data: string[]): string {
-	const invoiceIdIndex = 1;
-	return data[invoiceIdIndex];
-}
-
-function getTickets(data: string[]): Ticket[] {
-	return getTicketIndices(data)
-		.map(({ start, end }) => data.slice(start, end + 1)) // Include the end row
-		.map(parseTicket);
-}
-
-function getTicketIndices(data: string[]): { start: number; end: number }[] {
-	const endMarker = 'www.forumcinemas.lv'; // A stable value within each ticket
-	const endOffset = 1; // How far the ticket ends from the endMarker
-
-	const ticketCount = data.filter((str) => str === endMarker).length;
-	const startIndex = 2;
-
-	const ticketRowIndices: { start: number; end: number }[] = [];
-
-	// First ticket starts at startIndex and ends when endMarker is found, plus one row.
-	ticketRowIndices.push({
-		start: startIndex,
-		end: data.indexOf(endMarker, startIndex) + endOffset,
-	});
-
-	// The next ticket starts at the end of the previous ticket and ends when endMarker is found, plus one row
-	for (let i = 1; i < ticketCount; i++) {
-		const previousTicket = ticketRowIndices[i - 1];
-		const start = previousTicket.end + 1; // Start at the next row
-		const end = data.indexOf(endMarker, start) + endOffset;
-
-		ticketRowIndices.push({ start, end });
-	}
-
-	if (ticketRowIndices.length !== ticketCount) {
-		throw new Error('Ticket count mismatch');
-	}
-
-	return ticketRowIndices;
-}
-
-function parseTicket(data: string[]): Ticket {
+export function parseTicket(data: string[]): Ticket {
 	return {
 		id: getTicketId(data),
 		auditorium: data[1],
