@@ -1,13 +1,22 @@
 import { PDFPageProxy } from 'pdfjs-dist';
-import { getRectImage, renderPageToCanvas } from '../../../../../../lib/canvas';
+import {
+	getRectImageData,
+	renderPageToCanvas,
+} from '../../../../../../lib/canvas';
 import { Rect } from './path.model';
 
 export async function getTicketImages(page: PDFPageProxy, rects: Rect[]) {
 	const canvas = await renderPageToCanvas(page);
 
-	return rects
+	const imagesDataPromises = rects
 		.map((rect) => flipRect(rect, canvas.height))
-		.map((rect) => getRectImage(rect, canvas));
+		.map((rect) => getRectImageData(rect, canvas));
+
+	const imagesData = await Promise.all(imagesDataPromises);
+	return imagesData.map((data, index) => {
+		const rect = rects[index];
+		return new ImageData(data, rect.width, rect.height);
+	});
 }
 
 function flipRect(rect: Rect, canvasHeight: number) {

@@ -10,5 +10,7 @@ export function getTicketCodes(images: ImageData[]) {
 }
 
 function getCode(image: ImageData, decoder: Decoder) {
-	return decoder.decode(image.data, image.width, image.height)?.data;
+	const width = Math.floor(image.width);
+	const height = Math.floor(image.height);
+	return decoder.decode(image.data, width, height)?.data;
 }

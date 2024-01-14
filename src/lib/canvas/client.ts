@@ -22,10 +22,10 @@ export async function renderPageToCanvas(page: PDFPageProxy) {
 	return canvas;
 }
 
-export function getRectImage(rect: Rect, canvas: HTMLCanvasElement) {
+export function getRectImageData(rect: Rect, canvas: HTMLCanvasElement) {
 	const context = canvas.getContext('2d');
 	assert(context, 'Canvas context is null');
 
 	const { x, y, width, height } = rect;
-	return context.getImageData(x, y, width, height);
+	return context.getImageData(x, y, width, height).data;
 }

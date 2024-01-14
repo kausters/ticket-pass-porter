@@ -15,8 +15,12 @@ export async function scan(page: PDFPageProxy): Promise<Scan[]> {
 	const codes = getTicketCodes(images);
 
 	// 4. Put them together
-	return images.map((image, index) => ({
+	return images.map((imageData, index) => ({
 		code: codes[index],
-		image,
+		image: {
+			width: imageData.width,
+			height: imageData.height,
+			data: imageData.data,
+		},
 	}));
 }

@@ -1,0 +1,29 @@
+'use server';
+
+import { Canvas } from 'canvas';
+import { PDFPageProxy } from 'pdfjs-dist';
+import { Rect } from '../../app/ticket/view/parse/markus/scan/path.model';
+
+export async function renderPageToCanvas(page: PDFPageProxy): Promise<Canvas> {
+	const viewport = page.getViewport({ scale: 1 });
+	const canvas = new Canvas(viewport.width, viewport.height);
+
+	const canvasContext = canvas.getContext('2d');
+	const renderOptions: Parameters<PDFPageProxy['render']>[0] = {
+		canvasContext: canvasContext as unknown as CanvasRenderingContext2D,
+		viewport,
+	};
+
+	await page.render(renderOptions).promise;
+	return canvas;
+}
+
+export async function getRectImageData(
+	rect: Rect,
+	canvas: Canvas,
+): Promise<Uint8ClampedArray> {
+	const context = canvas.getContext('2d');
+	const { x, y, width, height } = rect;
+	const image = context.getImageData(x, y, width, height);
+	return image.data;
+}

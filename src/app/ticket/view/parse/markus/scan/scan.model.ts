@@ -1,4 +1,8 @@
 export interface Scan {
 	code: string | undefined;
-	image: ImageData;
+	image: {
+		width: number;
+		height: number;
+		data: Uint8ClampedArray;
+	};
 }

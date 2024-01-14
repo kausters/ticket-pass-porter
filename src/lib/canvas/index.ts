@@ -1,23 +1,29 @@
+import { Canvas as NodeCanvas } from 'canvas';
 import { PDFPageProxy } from 'pdfjs-dist';
 import { Rect } from '../../app/ticket/view/parse/markus/scan/path.model';
 
 export async function renderPageToCanvas(
 	page: PDFPageProxy,
-): Promise<HTMLCanvasElement> {
+): Promise<HTMLCanvasElement | NodeCanvas> {
 	if (isServer()) {
-		throw new Error('Not implemented');
+		const { renderPageToCanvas } = await import('./server');
+		return renderPageToCanvas(page);
 	} else {
 		const { renderPageToCanvas } = await import('./client');
 		return renderPageToCanvas(page);
 	}
 }
 
-export function getRectImage(rect: Rect, canvas: HTMLCanvasElement): ImageData {
+export async function getRectImageData(
+	rect: Rect,
+	canvas: HTMLCanvasElement | NodeCanvas,
+): Promise<Uint8ClampedArray> {
 	if (isServer()) {
-		throw new Error('Not implemented');
+		const { getRectImageData } = await import('./server');
+		return getRectImageData(rect, canvas as NodeCanvas);
 	} else {
-		const { getRectImage } = require('./client');
-		return getRectImage(rect, canvas);
+		const { getRectImageData } = await import('./client');
+		return getRectImageData(rect, canvas as HTMLCanvasElement);
 	}
 }
 
