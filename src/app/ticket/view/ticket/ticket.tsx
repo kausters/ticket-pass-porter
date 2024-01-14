@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { FunctionComponent } from 'react';
 import { Ticket as TicketData } from '../tickets.model';
-import Qr from './qr';
+import TicketQr from './ticket-qr';
 import styles from './ticket.module.scss';
 
 const Ticket: FunctionComponent<{ data: TicketData }> = ({ data }) => {
@@ -20,7 +20,7 @@ const Ticket: FunctionComponent<{ data: TicketData }> = ({ data }) => {
 				</div>
 
 				<div className={styles.topCode}>
-					<Qr data={data.code}></Qr>
+					<TicketQr data={data.code}></TicketQr>
 					<p className={styles.id}>{data.code}</p>
 				</div>
 			</div>
