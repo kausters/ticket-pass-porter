@@ -1,11 +1,10 @@
 import type { PDFPageProxy } from 'pdfjs-dist';
+import { Scan } from './scan.model';
 import { getTicketCodes } from './ticket-codes';
 import { getTicketImages } from './ticket-images';
 import { getTicketRects } from './ticket-rects';
 
-export async function scan(
-	page: PDFPageProxy,
-): Promise<(string | undefined)[]> {
+export async function scan(page: PDFPageProxy): Promise<Scan[]> {
 	// 1. Find the rectangles of each ticket
 	const rects = await getTicketRects(page);
 
@@ -13,5 +12,11 @@ export async function scan(
 	const images = await getTicketImages(page, rects);
 
 	// 3. Read the QR code from each image
-	return getTicketCodes(images);
+	const codes = getTicketCodes(images);
+
+	// 4. Put them together
+	return images.map((image, index) => ({
+		code: codes[index],
+		image,
+	}));
 }

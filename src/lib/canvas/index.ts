@@ -1,7 +1,9 @@
 import { PDFPageProxy } from 'pdfjs-dist';
 import { Rect } from '../../app/ticket/view/parse/markus/scan/path.model';
 
-export async function renderPageToCanvas(page: PDFPageProxy) {
+export async function renderPageToCanvas(
+	page: PDFPageProxy,
+): Promise<HTMLCanvasElement> {
 	if (isServer()) {
 		throw new Error('Not implemented');
 	} else {
@@ -10,7 +12,7 @@ export async function renderPageToCanvas(page: PDFPageProxy) {
 	}
 }
 
-export function getRectImage(rect: Rect, canvas: HTMLCanvasElement) {
+export function getRectImage(rect: Rect, canvas: HTMLCanvasElement): ImageData {
 	if (isServer()) {
 		throw new Error('Not implemented');
 	} else {

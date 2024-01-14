@@ -8,6 +8,10 @@ export { isValid } from './is-valid';
 export async function parse(pdf: PDFDocumentProxy): Promise<TicketInvoice> {
 	const page = await pdf.getPage(1);
 
-	scan(page).then(console.log);
+	scan(page).then((scans) => {
+		const codes = scans.map((scan) => scan.code);
+		console.log(codes);
+	});
+
 	return read(page);
 }
