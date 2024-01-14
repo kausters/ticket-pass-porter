@@ -64,7 +64,7 @@ const Ticket: FunctionComponent<{ data: TicketData }> = ({ data }) => {
 				</footer>
 			</div>
 
-			<ImageData data={data.image}></ImageData>
+			<ImageData data={data.image} alt="Biļetes oriģināls"></ImageData>
 		</article>
 	);
 };

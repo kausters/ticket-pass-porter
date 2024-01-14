@@ -1,10 +1,16 @@
 'use client';
 
+import { FunctionComponent } from 'react';
 import { assert } from 'ts-essentials';
 
-const ImageData = ({ data }: { data: ImageData }) => {
+interface Props {
+	data: ImageData;
+	alt?: string;
+}
+
+const ImageData: FunctionComponent<Props> = ({ data, alt }) => {
 	const imageDataUrl = getImageDataUrl(data);
-	return <img src={imageDataUrl} alt="" />;
+	return <img src={imageDataUrl} alt={alt} />;
 };
 
 export default ImageData;
