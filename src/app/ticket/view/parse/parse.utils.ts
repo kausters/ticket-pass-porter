@@ -26,6 +26,10 @@ export function encodeImage(imageData: ImageData): Scan['image'] {
 }
 
 function encodeImageData(data: Uint8ClampedArray): string {
+	if (typeof Buffer !== 'undefined') {
+		return Buffer.from(data).toString('base64');
+	}
+
 	const binaryString = new Uint8Array(data).reduce(
 		(acc, byte) => acc + String.fromCharCode(byte),
 		'',
@@ -39,6 +43,11 @@ export function decodeImage(data: Scan['image']): ImageData {
 }
 
 function decodeImageData(data: string): Uint8ClampedArray {
+	if (typeof Buffer !== 'undefined') {
+		const decodedArray = Buffer.from(data, 'base64');
+		return new Uint8ClampedArray(decodedArray);
+	}
+
 	const binaryString = atob(data);
 	const len = binaryString.length;
 
