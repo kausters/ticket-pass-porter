@@ -6,9 +6,10 @@ import { useEffect, useState } from 'react';
 import { useTicketUpload } from '../ticket-upload-context';
 import styles from './page.module.scss';
 import { parse as parseClient } from './parse/client';
+import { TicketInvoiceParseData, TicketParseData } from './parse/parse.model';
 import { parse as parseServer } from './parse/server';
 import Ticket from './ticket/ticket';
-import { TicketInvoice } from './tickets.model';
+import { Ticket as TicketData, TicketInvoice } from './tickets.model';
 
 export default function Page() {
 	const invoice = useInvoice();
@@ -46,7 +47,8 @@ function useInvoice() {
 		(async () => {
 			if (!ticketFile) return;
 
-			const invoice = await parseClient(ticketFile);
+			const invoiceData = await parseClient(ticketFile);
+			const invoice = parseInvoiceData(invoiceData);
 			setInvoice(invoice);
 		})();
 	}, [ticketFile]);
@@ -57,10 +59,32 @@ function useInvoice() {
 			const ticketId = searchParams.get('id');
 			if (!ticketId) return;
 
-			const invoice = await parseServer(ticketId);
+			const invoiceData = await parseServer(ticketId);
+			const invoice = parseInvoiceData(invoiceData);
 			setInvoice(invoice);
 		})();
 	}, [searchParams]);
 
 	return invoice;
+}
+
+function parseInvoiceData(data: TicketInvoiceParseData): TicketInvoice {
+	return {
+		id: data.id,
+		tickets: data.tickets.map(parseTicketData),
+	};
+}
+
+function parseTicketData(data: TicketParseData): TicketData {
+	const imageDataArray = new TextEncoder().encode(data.image.data);
+	const imageData = Uint8ClampedArray.from(imageDataArray);
+
+	return {
+		...data,
+		image: {
+			...data.image,
+			data: imageData,
+			colorSpace: 'srgb',
+		},
+	};
 }

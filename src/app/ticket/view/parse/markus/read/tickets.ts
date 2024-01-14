@@ -1,7 +1,7 @@
-import { Ticket } from '../../../tickets.model';
+import { TicketReadData } from './read.model';
 import { parseTicket } from './ticket';
 
-export function getTickets(data: string[]): Ticket[] {
+export function getTickets(data: string[]): TicketReadData[] {
 	return getTicketIndices(data)
 		.map(({ start, end }) => data.slice(start, end + 1)) // Include the end row
 		.map(parseTicket);

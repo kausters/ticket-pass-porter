@@ -1,10 +1,10 @@
 import { DateTime, DateTimeOptions } from 'luxon';
 import { assert } from 'ts-essentials';
-import { Ticket } from '../../../tickets.model';
+import { TicketReadData } from './read.model';
 
 const dateTimeOptions: DateTimeOptions = { zone: 'Europe/Riga', locale: 'lv' };
 
-export function parseTicket(data: string[]): Ticket {
+export function parseTicket(data: string[]): TicketReadData {
 	return {
 		code: getTicketCode(data),
 		auditorium: data[1],

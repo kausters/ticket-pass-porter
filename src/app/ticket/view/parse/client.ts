@@ -1,13 +1,13 @@
 'use client';
 
 import PdfJs from '../../../../lib/pdf/pdf-js';
-import { TicketInvoice } from '../tickets.model';
 import {
 	isValid as isMarkusTicket,
 	parse as parseMarkusTicket,
 } from './markus';
+import { TicketInvoiceParseData } from './parse.model';
 
-export async function parse(file: File): Promise<TicketInvoice> {
+export async function parse(file: File): Promise<TicketInvoiceParseData> {
 	const { getDocument } = await PdfJs;
 
 	const arrayBuffer = await file.arrayBuffer();
