@@ -18,4 +18,6 @@ export interface Ticket {
 	purchased: string;
 	price: number;
 	detail: string;
+
+	image?: ImageData;
 }

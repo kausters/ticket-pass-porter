@@ -28,8 +28,9 @@ function getTicketId(data: string[]): string {
 	/* If the ID is shorter than the expected length, it must have ended with
 	a space character (valid alphanumeric) and was trimmed by the PDF reader.
 	Unfortunately, that'll make for an invalid ID and a broken QR code, so we
-	have to re-pad the end of the ID with spaces to make it valid again. If we
-	could actually read the QR off the ticket, we wouldn't have to do this. */
+	have to re-pad the end of the ID with spaces to make it valid again. This
+	is kind of redundant since we read the QR off the ticket, but that is not
+	100% reliable, so we'll still keep this as a fallback. */
 
 	if (id.length < idLength) {
 		return id.padEnd(idLength, ' ');

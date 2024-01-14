@@ -8,10 +8,22 @@ export { isValid } from './is-valid';
 export async function parse(pdf: PDFDocumentProxy): Promise<TicketInvoice> {
 	const page = await pdf.getPage(1);
 
-	scan(page).then((scans) => {
-		const codes = scans.map((scan) => scan.code);
-		console.log(codes);
-	});
+	const [readResults, scanResults] = await Promise.all([
+		read(page),
+		scan(page),
+	]);
 
-	return read(page);
+	if (scanResults.length === readResults.tickets.length) {
+		// We get image data and a more reliable code from the scan, so we use that
+		readResults.tickets.forEach((ticket, index) => {
+			const scanResult = scanResults[index];
+
+			ticket.image = scanResult.image;
+			if (scanResult.code) ticket.id = scanResult.code;
+		});
+	} else {
+		console.error('Scan and read results do not match, using reads only');
+	}
+
+	return readResults;
 }
