@@ -26,7 +26,7 @@ export default function Page() {
 
 			<ul className={styles.tickets}>
 				{invoice.tickets.map((ticket) => (
-					<li key={ticket.id}>
+					<li key={ticket.code}>
 						<Ticket data={ticket} />
 					</li>
 				))}

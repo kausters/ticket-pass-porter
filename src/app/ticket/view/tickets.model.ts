@@ -4,7 +4,7 @@ export interface TicketInvoice {
 }
 
 export interface Ticket {
-	id: string;
+	code: string;
 	type: string;
 	name: string;
 	rating: string;

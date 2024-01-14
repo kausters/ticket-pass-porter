@@ -20,8 +20,8 @@ const Ticket: FunctionComponent<{ data: TicketData }> = ({ data }) => {
 				</div>
 
 				<div className={styles.topCode}>
-					<Qr data={data.id}></Qr>
-					<p className={styles.id}>{data.id}</p>
+					<Qr data={data.code}></Qr>
+					<p className={styles.id}>{data.code}</p>
 				</div>
 			</div>
 

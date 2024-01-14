@@ -19,7 +19,7 @@ export async function parse(pdf: PDFDocumentProxy): Promise<TicketInvoice> {
 			const scanResult = scanResults[index];
 
 			ticket.image = scanResult.image;
-			if (scanResult.code) ticket.id = scanResult.code;
+			if (scanResult.code) ticket.code = scanResult.code;
 		});
 	} else {
 		console.error('Scan and read results do not match, using reads only');
