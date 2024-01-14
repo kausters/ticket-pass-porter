@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react';
 import { useTicketUpload } from '../ticket-upload-context';
 import styles from './page.module.scss';
 import { parse as parseClient } from './parse/client';
-import { TicketInvoiceParseData, TicketParseData } from './parse/parse.model';
+import { parseInvoiceData } from './parse/parse.utils';
 import { parse as parseServer } from './parse/server';
 import Ticket from './ticket/ticket';
-import { Ticket as TicketData, TicketInvoice } from './tickets.model';
+import { TicketInvoice } from './tickets.model';
 
 export default function Page() {
 	const invoice = useInvoice();
@@ -66,25 +66,4 @@ function useInvoice() {
 	}, [searchParams]);
 
 	return invoice;
-}
-
-function parseInvoiceData(data: TicketInvoiceParseData): TicketInvoice {
-	return {
-		id: data.id,
-		tickets: data.tickets.map(parseTicketData),
-	};
-}
-
-function parseTicketData(data: TicketParseData): TicketData {
-	const imageDataArray = new TextEncoder().encode(data.image.data);
-	const imageData = Uint8ClampedArray.from(imageDataArray);
-
-	return {
-		...data,
-		image: {
-			...data.image,
-			data: imageData,
-			colorSpace: 'srgb',
-		},
-	};
 }

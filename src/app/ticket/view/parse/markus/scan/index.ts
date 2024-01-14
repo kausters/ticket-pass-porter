@@ -1,4 +1,5 @@
 import type { PDFPageProxy } from 'pdfjs-dist';
+import { encodeImage } from '../../parse.utils';
 import { Scan } from './scan.model';
 import { getTicketCodes } from './ticket-codes';
 import { getTicketImages } from './ticket-images';
@@ -17,10 +18,6 @@ export async function scan(page: PDFPageProxy): Promise<Scan[]> {
 	// 4. Put them together
 	return images.map((imageData, index) => ({
 		code: codes[index],
-		image: {
-			width: imageData.width,
-			height: imageData.height,
-			data: new TextDecoder().decode(imageData.data),
-		},
+		image: encodeImage(imageData),
 	}));
 }
