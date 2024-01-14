@@ -3,6 +3,6 @@ export interface Scan {
 	image: {
 		width: number;
 		height: number;
-		data: Uint8ClampedArray;
+		data: string;
 	};
 }

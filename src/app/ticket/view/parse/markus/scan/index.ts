@@ -20,7 +20,7 @@ export async function scan(page: PDFPageProxy): Promise<Scan[]> {
 		image: {
 			width: imageData.width,
 			height: imageData.height,
-			data: imageData.data,
+			data: new TextDecoder().decode(imageData.data),
 		},
 	}));
 }

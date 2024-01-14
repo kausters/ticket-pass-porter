@@ -1,3 +1,5 @@
+import { Scan } from './parse/markus/scan/scan.model';
+
 export interface TicketInvoice {
 	id: string;
 	tickets: Ticket[];
@@ -19,5 +21,5 @@ export interface Ticket {
 	price: number;
 	detail: string;
 
-	image?: ImageData;
+	scan: Scan['image'];
 }

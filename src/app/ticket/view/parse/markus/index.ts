@@ -18,7 +18,7 @@ export async function parse(pdf: PDFDocumentProxy): Promise<TicketInvoice> {
 		readResults.tickets.forEach((ticket, index) => {
 			const scanResult = scanResults[index];
 
-			ticket.image = scanResult.image;
+			ticket.scan = scanResult.image;
 			if (scanResult.code) ticket.code = scanResult.code;
 		});
 	} else {
