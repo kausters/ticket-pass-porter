@@ -8,12 +8,12 @@ interface Props {
 	alt?: string;
 }
 
-const ImageData: FunctionComponent<Props> = ({ data, alt }) => {
+const TicketImage: FunctionComponent<Props> = ({ data, alt }) => {
 	const imageDataUrl = getImageDataUrl(data);
 	return <img src={imageDataUrl} alt={alt} />;
 };
 
-export default ImageData;
+export default TicketImage;
 
 function getImageDataUrl(data: ImageData): string {
 	const canvas = document.createElement('canvas');
