@@ -1,4 +1,4 @@
-import { Ticket, TicketInvoice } from '../../ticket.model';
+import { Ticket, TicketInvoice } from '../ticket.model';
 import { Scan } from './markus/scan/scan.model';
 import { TicketInvoiceParseData, TicketParseData } from './parse.model';
 

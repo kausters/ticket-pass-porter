@@ -3,7 +3,7 @@ import { PDFPageProxy } from 'pdfjs-dist';
 import {
 	getRectImageData,
 	renderPageToCanvas,
-} from '../../../../../../lib/canvas';
+} from '../../../../../lib/canvas';
 import { Rect } from './path.model';
 
 export async function getTicketImages(page: PDFPageProxy, rects: Rect[]) {

@@ -1,10 +1,10 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 
+import { parse as parseClient } from '../parse/client';
+import { TicketInvoiceParseData } from '../parse/parse.model';
+import { parseInvoiceData } from '../parse/parse.utils';
+import { parse as parseServer } from '../parse/server';
 import { TicketInvoice } from '../ticket.model';
-import { parse as parseClient } from '../view/parse/client';
-import { TicketInvoiceParseData } from '../view/parse/parse.model';
-import { parseInvoiceData } from '../view/parse/parse.utils';
-import { parse as parseServer } from '../view/parse/server';
 
 interface Props {
 	file?: File;

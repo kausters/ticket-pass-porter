@@ -1,6 +1,6 @@
 import { type PDFPageProxy } from 'pdfjs-dist';
 
-import ops from '../../../../../../lib/pdf/ops';
+import ops from '../../../../../lib/pdf/ops';
 import { Line, Point } from './path.model';
 
 type LineArgsOps = [typeof ops.moveTo, typeof ops.lineTo];

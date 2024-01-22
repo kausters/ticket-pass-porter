@@ -3,7 +3,7 @@
 import { PDFPageProxy } from 'pdfjs-dist';
 import { assert } from 'ts-essentials';
 
-import { Rect } from '../../app/ticket/view/parse/markus/scan/path.model';
+import { Rect } from '../../app/ticket/parse/markus/scan/path.model';
 
 export async function renderPageToCanvas(page: PDFPageProxy) {
 	const canvas = document.createElement('canvas');
