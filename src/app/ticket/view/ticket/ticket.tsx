@@ -1,9 +1,10 @@
 import { DateTime } from 'luxon';
 import { FunctionComponent } from 'react';
+
 import { Ticket as TicketData } from '../tickets.model';
 import ImageData from './image-data';
-import TicketQr from './ticket-qr';
 import styles from './ticket.module.scss';
+import TicketQr from './ticket-qr';
 
 const Ticket: FunctionComponent<{ data: TicketData }> = ({ data }) => {
 	const start = DateTime.fromISO(data.start);

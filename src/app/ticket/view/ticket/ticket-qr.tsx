@@ -1,5 +1,6 @@
 import { Encoder, ErrorCorrectionLevel, QRAlphanumeric } from '@nuintun/qrcode';
 import { FunctionComponent } from 'react';
+
 import styles from './ticket-qr.module.scss';
 
 const QR_WIDTH = 150;

@@ -1,4 +1,5 @@
 import { type PDFPageProxy } from 'pdfjs-dist';
+
 import ops from '../../../../../../lib/pdf/ops';
 import { Line, Point } from './path.model';
 

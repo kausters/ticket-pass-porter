@@ -1,4 +1,5 @@
 import type { PDFPageProxy } from 'pdfjs-dist';
+
 import { encodeImage } from '../../parse.utils';
 import { Scan } from './scan.model';
 import { getTicketCodes } from './ticket-codes';

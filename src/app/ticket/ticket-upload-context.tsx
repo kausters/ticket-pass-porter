@@ -8,7 +8,7 @@ import React, {
 	useContext,
 	useState,
 } from 'react';
-import { assert } from 'ts-essentials'; // Define the type for the context value
+import { assert } from 'ts-essentials';
 
 // Define the type for the context value
 interface TicketUploadContextValue {

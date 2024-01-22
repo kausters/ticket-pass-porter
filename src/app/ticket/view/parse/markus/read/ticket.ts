@@ -1,5 +1,6 @@
 import { DateTime, DateTimeOptions } from 'luxon';
 import { assert } from 'ts-essentials';
+
 import { TicketReadData } from './read.model';
 
 const dateTimeOptions: DateTimeOptions = { zone: 'Europe/Riga', locale: 'lv' };

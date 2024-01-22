@@ -1,4 +1,5 @@
 import { PDFPageProxy } from 'pdfjs-dist';
+
 import {
 	getRectImageData,
 	renderPageToCanvas,

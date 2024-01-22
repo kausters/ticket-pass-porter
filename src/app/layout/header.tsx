@@ -1,4 +1,5 @@
 import Image from 'next/image';
+
 import styles from './header.module.css';
 import logo from './logo.png';
 

@@ -1,4 +1,5 @@
 import { PDFDocumentProxy } from 'pdfjs-dist';
+
 import { TicketInvoiceParseData } from '../parse.model';
 import { read } from './read';
 import { TicketInvoiceReadData } from './read/read.model';

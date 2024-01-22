@@ -1,5 +1,6 @@
 import type { PDFPageProxy } from 'pdfjs-dist';
 import type { TextItem } from 'pdfjs-dist/types/src/display/api';
+
 import { getInvoiceId } from './invoice';
 import { TicketInvoiceReadData } from './read.model';
 import { getTickets } from './tickets';

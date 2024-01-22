@@ -1,5 +1,6 @@
 import { Canvas as NodeCanvas } from 'canvas';
 import { PDFPageProxy } from 'pdfjs-dist';
+
 import { Rect } from '../../app/ticket/view/parse/markus/scan/path.model';
 
 export async function renderPageToCanvas(
