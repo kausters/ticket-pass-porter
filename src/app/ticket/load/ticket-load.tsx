@@ -1,5 +1,5 @@
 import { useSearchParams } from 'next/navigation';
-import { FunctionComponent, useEffect } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 
 import { parse as parseClient } from '../view/parse/client';
 import { parseInvoiceData } from '../view/parse/parse.utils';
@@ -13,15 +13,19 @@ interface Props {
 
 const TicketLoad: FunctionComponent<Props> = ({ ticketFile, onLoad }) => {
 	const searchParams = useSearchParams();
+	const [loading, setLoading] = useState(false);
 
 	// Parsing uploaded ticket is done client-side, so we just do it and update the state after
 	useEffect(() => {
 		(async () => {
 			if (!ticketFile) return;
+			setLoading(true);
 
 			const invoiceData = await parseClient(ticketFile);
 			const invoice = parseInvoiceData(invoiceData);
+
 			onLoad(invoice);
+			setLoading(false);
 		})();
 	}, [onLoad, ticketFile]);
 
@@ -30,14 +34,17 @@ const TicketLoad: FunctionComponent<Props> = ({ ticketFile, onLoad }) => {
 		(async () => {
 			const ticketId = searchParams.get('id');
 			if (!ticketId) return;
+			setLoading(true);
 
 			const invoiceData = await parseServer(ticketId);
 			const invoice = parseInvoiceData(invoiceData);
+
 			onLoad(invoice);
+			setLoading(false);
 		})();
 	}, [onLoad, searchParams]);
 
-	return <p>Loading…</p>;
+	return loading && <p>Loading…</p>;
 };
 
 export default TicketLoad;

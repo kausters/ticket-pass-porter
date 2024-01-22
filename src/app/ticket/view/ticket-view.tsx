@@ -11,12 +11,7 @@ interface Props {
 }
 
 const TicketView: FunctionComponent<Props> = ({ invoice }) => {
-	if (!invoice)
-		return (
-			<div>
-				<p>No invoice.</p>
-			</div>
-		);
+	if (!invoice) return;
 
 	return (
 		<div>
