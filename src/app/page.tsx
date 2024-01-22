@@ -7,10 +7,7 @@ export default function Home() {
 		<main className={styles.main}>
 			<ul>
 				<li>
-					<Link href="/ticket/view/">View example</Link>
-				</li>
-				<li>
-					<Link href="/ticket/upload/">Upload ticket</Link>
+					<Link href="/ticket/">Upload ticket</Link>
 				</li>
 			</ul>
 		</main>

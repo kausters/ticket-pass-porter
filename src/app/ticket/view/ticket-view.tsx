@@ -4,14 +4,14 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { useTicketUpload } from '../ticket-upload-context';
-import styles from './page.module.scss';
 import { parse as parseClient } from './parse/client';
 import { parseInvoiceData } from './parse/parse.utils';
 import { parse as parseServer } from './parse/server';
 import Ticket from './ticket/ticket';
+import styles from './ticket-view.module.scss';
 import { TicketInvoice } from './tickets.model';
 
-export default function Page() {
+export default function TicketView() {
 	const invoice = useInvoice();
 
 	if (!invoice)

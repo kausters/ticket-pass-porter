@@ -1,24 +1,18 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-
 import { useTicketUpload } from './ticket-upload-context';
 import TicketUpload from './upload/ticket-upload';
+import TicketView from './view/ticket-view';
 
 export default function TicketPage() {
 	const { setTicketFile } = useTicketUpload();
-	const router = useRouter();
-
-	const onTicket = (ticket: File) => {
-		setTicketFile(ticket);
-		router.push('ticket/view');
-	};
 
 	return (
 		<div>
-			<h1>Upload</h1>
+			<h1>Ticket</h1>
 
-			<TicketUpload onTicket={onTicket}></TicketUpload>
+			<TicketUpload onTicket={setTicketFile}></TicketUpload>
+			<TicketView></TicketView>
 		</div>
 	);
 }
