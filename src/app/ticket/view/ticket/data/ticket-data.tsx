@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon';
 import { FunctionComponent } from 'react';
 
-import { Ticket } from '../../ticket.model';
+import { Ticket } from '../../../ticket.model';
+import Qr from './qr/qr';
 import styles from './ticket-data.module.scss';
-import TicketQr from './ticket-qr';
 
 const TicketData: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 	const start = DateTime.fromISO(data.start);
@@ -21,7 +21,7 @@ const TicketData: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 				</div>
 
 				<div className={styles.topCode}>
-					<TicketQr data={data.code}></TicketQr>
+					<Qr data={data.code}></Qr>
 					<p className={styles.id}>{data.code}</p>
 				</div>
 			</div>
