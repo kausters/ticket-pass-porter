@@ -3,8 +3,8 @@
 import { FunctionComponent } from 'react';
 
 import Ticket from './ticket/ticket';
-import styles from './ticket-view.module.scss';
 import { TicketInvoice } from './tickets.model';
+import styles from './view.module.scss';
 
 interface Props {
 	invoice: TicketInvoice;

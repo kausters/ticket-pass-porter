@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 
-import Import from './import/ticket-import';
-import Load from './load/ticket-load';
-import View from './view/ticket-view';
+import Import from './import';
+import Load from './load';
+import View from './view';
 import { TicketInvoice } from './view/tickets.model';
 
 export default function TicketPage() {
