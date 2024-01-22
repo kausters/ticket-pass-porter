@@ -1,29 +1,57 @@
-import { FormEventHandler, FunctionComponent } from 'react';
+import { ChangeEventHandler, FormEventHandler, FunctionComponent } from 'react';
 
 interface Props {
 	onTicket: (file: File) => void;
 }
 
 const TicketUpload: FunctionComponent<Props> = ({ onTicket }) => {
+	const handleFileChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+		const input = event.currentTarget;
+		input.setCustomValidity('');
+		input.form?.requestSubmit();
+	};
+
 	const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
 		event.preventDefault();
 
 		const form = event.currentTarget;
-		const fileInput = form.elements.namedItem('ticket') as HTMLInputElement;
+		const ticket = form.elements.namedItem('ticket') as HTMLInputElement;
+		const result = validateInput(ticket.files);
 
-		// Check that the input is valid
-		if (!fileInput.files || fileInput.files.length !== 1) return;
+		if (typeof result === 'string') {
+			ticket.setCustomValidity(result);
+			ticket.reportValidity();
+			return;
+		}
 
-		const uploadedFile = fileInput.files[0];
-		onTicket(uploadedFile);
+		onTicket(result);
 	};
 
 	return (
 		<form onSubmit={handleSubmit}>
-			<input name="ticket" type="file" />
-			<button type="submit">Submit</button>
+			<input
+				name="ticket"
+				type="file"
+				accept="application/pdf"
+				required={true}
+				onChange={handleFileChange}
+			/>
 		</form>
 	);
 };
 
 export default TicketUpload;
+
+function validateInput(files: FileList | null): string | File {
+	const file = files?.[0];
+
+	if (!file || files.length !== 1) {
+		return 'Please select a file';
+	}
+
+	if (file.type !== 'application/pdf') {
+		return 'Please select a PDF file';
+	}
+
+	return file;
+}
