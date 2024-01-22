@@ -2,22 +2,29 @@
 
 import { useState } from 'react';
 
-import TicketImport from './import/ticket-import';
-import TicketLoad from './load/ticket-load';
-import TicketView from './view/ticket-view';
+import Import from './import/ticket-import';
+import Load from './load/ticket-load';
+import View from './view/ticket-view';
 import { TicketInvoice } from './view/tickets.model';
 
 export default function TicketPage() {
-	const [ticketFile, setTicketFile] = useState<File>();
-	const [invoice, setInvoice] = useState<TicketInvoice>();
-
 	return (
 		<div>
 			<h1>Ticket</h1>
-
-			<TicketImport onImport={setTicketFile}></TicketImport>
-			<TicketLoad ticketFile={ticketFile} onLoad={setInvoice}></TicketLoad>
-			<TicketView invoice={invoice}></TicketView>
+			<Invoice></Invoice>
 		</div>
 	);
+}
+
+function Invoice() {
+	const [file, setFile] = useState<File>();
+	const [invoice, setInvoice] = useState<TicketInvoice>();
+
+	if (invoice) {
+		return <View invoice={invoice}></View>;
+	} else if (file) {
+		return <Load file={file} onLoad={setInvoice}></Load>;
+	} else {
+		return <Import onImport={setFile}></Import>;
+	}
 }

@@ -7,27 +7,27 @@ import { parse as parseServer } from '../view/parse/server';
 import { TicketInvoice } from '../view/tickets.model';
 
 interface Props {
-	ticketFile?: File;
+	file?: File;
 	onLoad: (invoice: TicketInvoice) => void;
 }
 
-const TicketLoad: FunctionComponent<Props> = ({ ticketFile, onLoad }) => {
+const TicketLoad: FunctionComponent<Props> = ({ file, onLoad }) => {
 	const searchParams = useSearchParams();
 	const [loading, setLoading] = useState(false);
 
 	// Parsing uploaded ticket is done client-side, so we just do it and update the state after
 	useEffect(() => {
 		(async () => {
-			if (!ticketFile) return;
+			if (!file) return;
 			setLoading(true);
 
-			const invoiceData = await parseClient(ticketFile);
+			const invoiceData = await parseClient(file);
 			const invoice = parseInvoiceData(invoiceData);
 
 			onLoad(invoice);
 			setLoading(false);
 		})();
-	}, [onLoad, ticketFile]);
+	}, [onLoad, file]);
 
 	// Parsing ticket by ID is done server-side, so we declare an effect to do it
 	useEffect(() => {

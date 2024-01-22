@@ -7,12 +7,10 @@ import styles from './ticket-view.module.scss';
 import { TicketInvoice } from './tickets.model';
 
 interface Props {
-	invoice?: TicketInvoice;
+	invoice: TicketInvoice;
 }
 
 const TicketView: FunctionComponent<Props> = ({ invoice }) => {
-	if (!invoice) return;
-
 	return (
 		<div>
 			<h1>Invoice #{invoice.id}</h1>
