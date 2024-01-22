@@ -3,9 +3,9 @@
 import { useRouter } from 'next/navigation';
 import { ChangeEventHandler, FormEventHandler } from 'react';
 
-import { useTicketUpload } from '../ticket-upload-context';
+import { useTicketUpload } from './ticket-upload-context';
 
-export default function Upload() {
+export default function TicketPage() {
 	const { setTicketFile } = useTicketUpload();
 	const router = useRouter();
 
@@ -22,7 +22,7 @@ export default function Upload() {
 
 	const handleSubmit: FormEventHandler = (event) => {
 		event.preventDefault();
-		router.push('view');
+		router.push('ticket/view');
 	};
 
 	return (
