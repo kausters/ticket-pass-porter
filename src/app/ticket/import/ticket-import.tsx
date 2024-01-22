@@ -1,10 +1,10 @@
 import { ChangeEventHandler, FormEventHandler, FunctionComponent } from 'react';
 
 interface Props {
-	onTicket: (file: File) => void;
+	onImport: (file: File) => void;
 }
 
-const TicketImport: FunctionComponent<Props> = ({ onTicket }) => {
+const TicketImport: FunctionComponent<Props> = ({ onImport }) => {
 	const handleFileChange: ChangeEventHandler<HTMLInputElement> = (event) => {
 		const input = event.currentTarget;
 		input.setCustomValidity('');
@@ -24,7 +24,7 @@ const TicketImport: FunctionComponent<Props> = ({ onTicket }) => {
 			return;
 		}
 
-		onTicket(result);
+		onImport(result);
 	};
 
 	return (

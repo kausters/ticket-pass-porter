@@ -11,7 +11,7 @@ export default function TicketPage() {
 		<div>
 			<h1>Ticket</h1>
 
-			<TicketImport onTicket={setTicketFile}></TicketImport>
+			<TicketImport onImport={setTicketFile}></TicketImport>
 			<TicketView></TicketView>
 		</div>
 	);
