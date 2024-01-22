@@ -1,4 +1,3 @@
-import { useSearchParams } from 'next/navigation';
 import { FunctionComponent, useEffect, useState } from 'react';
 
 import { TicketInvoice } from '../ticket.model';
@@ -8,11 +7,11 @@ import { parse as parseServer } from '../view/parse/server';
 
 interface Props {
 	file?: File;
+	id?: string;
 	onLoad: (invoice: TicketInvoice) => void;
 }
 
-const TicketLoad: FunctionComponent<Props> = ({ file, onLoad }) => {
-	const searchParams = useSearchParams();
+const TicketLoad: FunctionComponent<Props> = ({ file, id, onLoad }) => {
 	const [loading, setLoading] = useState(false);
 
 	// Parsing uploaded ticket is done client-side, so we just do it and update the state after
@@ -32,17 +31,16 @@ const TicketLoad: FunctionComponent<Props> = ({ file, onLoad }) => {
 	// Parsing ticket by ID is done server-side, so we declare an effect to do it
 	useEffect(() => {
 		(async () => {
-			const ticketId = searchParams.get('id');
-			if (!ticketId) return;
+			if (!id) return;
 			setLoading(true);
 
-			const invoiceData = await parseServer(ticketId);
+			const invoiceData = await parseServer(id);
 			const invoice = parseInvoiceData(invoiceData);
 
 			onLoad(invoice);
 			setLoading(false);
 		})();
-	}, [onLoad, searchParams]);
+	}, [onLoad, id]);
 
 	return loading && <p>Loading…</p>;
 };

@@ -1,5 +1,6 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 import Import from './import';
@@ -17,13 +18,16 @@ export default function TicketPage() {
 }
 
 function Invoice() {
+	const searchParams = useSearchParams();
+	const id = searchParams.get('id') || undefined;
+
 	const [file, setFile] = useState<File>();
 	const [invoice, setInvoice] = useState<TicketInvoice>();
 
 	if (invoice) {
 		return <View invoice={invoice}></View>;
-	} else if (file) {
-		return <Load file={file} onLoad={setInvoice}></Load>;
+	} else if (file || id) {
+		return <Load file={file} id={id} onLoad={setInvoice}></Load>;
 	} else {
 		return <Import onImport={setFile}></Import>;
 	}
