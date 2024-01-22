@@ -1,4 +1,4 @@
-import { Ticket, TicketInvoice } from '../../../tickets.model';
+import { Ticket, TicketInvoice } from '../../../../ticket.model';
 
 export type TicketReadData = Omit<Ticket, 'image'>;
 

@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { FunctionComponent } from 'react';
 
-import { Ticket as TicketData } from '../tickets.model';
+import { Ticket as TicketData } from '../../ticket.model';
 import ImageData from './image-data';
 import styles from './ticket.module.scss';
 import TicketQr from './ticket-qr';

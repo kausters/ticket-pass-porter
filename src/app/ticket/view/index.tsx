@@ -2,8 +2,8 @@
 
 import { FunctionComponent } from 'react';
 
+import { TicketInvoice } from '../ticket.model';
 import Ticket from './ticket/ticket';
-import { TicketInvoice } from './tickets.model';
 import styles from './view.module.scss';
 
 interface Props {

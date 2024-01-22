@@ -1,10 +1,10 @@
 import { useSearchParams } from 'next/navigation';
 import { FunctionComponent, useEffect, useState } from 'react';
 
+import { TicketInvoice } from '../ticket.model';
 import { parse as parseClient } from '../view/parse/client';
 import { parseInvoiceData } from '../view/parse/parse.utils';
 import { parse as parseServer } from '../view/parse/server';
-import { TicketInvoice } from '../view/tickets.model';
 
 interface Props {
 	file?: File;

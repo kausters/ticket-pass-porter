@@ -1,4 +1,4 @@
-import { Ticket, TicketInvoice } from '../tickets.model';
+import { Ticket, TicketInvoice } from '../../ticket.model';
 import { Scan } from './markus/scan/scan.model';
 
 export type TicketParseData = Omit<Ticket, 'image'> & {
