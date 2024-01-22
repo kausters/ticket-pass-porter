@@ -1,17 +1,17 @@
 'use client';
 
-import { useTicketUpload } from './ticket-upload-context';
-import TicketUpload from './upload/ticket-upload';
+import TicketImport from './import/ticket-import';
+import { useTicketImport } from './import/ticket-import-context';
 import TicketView from './view/ticket-view';
 
 export default function TicketPage() {
-	const { setTicketFile } = useTicketUpload();
+	const { setTicketFile } = useTicketImport();
 
 	return (
 		<div>
 			<h1>Ticket</h1>
 
-			<TicketUpload onTicket={setTicketFile}></TicketUpload>
+			<TicketImport onTicket={setTicketFile}></TicketImport>
 			<TicketView></TicketView>
 		</div>
 	);

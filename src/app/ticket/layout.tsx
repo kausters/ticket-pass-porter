@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 
-import { TicketUploadProvider } from './ticket-upload-context';
+import { TicketImportProvider } from './import/ticket-import-context';
 
 export default function TicketLayout({ children }: PropsWithChildren) {
-	return <TicketUploadProvider>{children}</TicketUploadProvider>;
+	return <TicketImportProvider>{children}</TicketImportProvider>;
 }

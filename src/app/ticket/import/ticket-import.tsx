@@ -4,7 +4,7 @@ interface Props {
 	onTicket: (file: File) => void;
 }
 
-const TicketUpload: FunctionComponent<Props> = ({ onTicket }) => {
+const TicketImport: FunctionComponent<Props> = ({ onTicket }) => {
 	const handleFileChange: ChangeEventHandler<HTMLInputElement> = (event) => {
 		const input = event.currentTarget;
 		input.setCustomValidity('');
@@ -40,7 +40,7 @@ const TicketUpload: FunctionComponent<Props> = ({ onTicket }) => {
 	);
 };
 
-export default TicketUpload;
+export default TicketImport;
 
 function validateInput(files: FileList | null): string | File {
 	const file = files?.[0];

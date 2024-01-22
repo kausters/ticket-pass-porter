@@ -3,7 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { useTicketUpload } from '../ticket-upload-context';
+import { useTicketImport } from '../import/ticket-import-context';
 import { parse as parseClient } from './parse/client';
 import { parseInvoiceData } from './parse/parse.utils';
 import { parse as parseServer } from './parse/server';
@@ -37,7 +37,7 @@ export default function TicketView() {
 }
 
 function useInvoice() {
-	const { ticketFile } = useTicketUpload();
+	const { ticketFile } = useTicketImport();
 	const searchParams = useSearchParams();
 
 	const [invoice, setInvoice] = useState<TicketInvoice>();
