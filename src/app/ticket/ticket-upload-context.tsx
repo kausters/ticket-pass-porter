@@ -24,7 +24,11 @@ const TicketUploadContext = createContext<TicketUploadContextValue | undefined>(
 // Custom hook for using the ticket upload context
 export function useTicketUpload() {
 	const context = useContext(TicketUploadContext);
-	assert(context, 'useTicketUpload must be used within a TicketUploadProvider');
+
+	assert(
+		context && Object.keys(context).length > 0,
+		'useTicketUpload must be used within a TicketUploadProvider',
+	);
 
 	return context;
 }
