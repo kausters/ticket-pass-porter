@@ -1,18 +1,17 @@
 import { useSearchParams } from 'next/navigation';
 import { FunctionComponent, useEffect } from 'react';
 
-import { useTicketImport } from '../import/ticket-import-context';
 import { parse as parseClient } from '../view/parse/client';
 import { parseInvoiceData } from '../view/parse/parse.utils';
 import { parse as parseServer } from '../view/parse/server';
 import { TicketInvoice } from '../view/tickets.model';
 
 interface Props {
+	ticketFile?: File;
 	onLoad: (invoice: TicketInvoice) => void;
 }
 
-const TicketLoad: FunctionComponent<Props> = ({ onLoad }) => {
-	const { ticketFile } = useTicketImport();
+const TicketLoad: FunctionComponent<Props> = ({ ticketFile, onLoad }) => {
 	const searchParams = useSearchParams();
 
 	// Parsing uploaded ticket is done client-side, so we just do it and update the state after
