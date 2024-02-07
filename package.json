@@ -10,6 +10,7 @@
 	},
 	"dependencies": {
 		"@nuintun/qrcode": "^3.4.0",
+		"ics": "^3.7.2",
 		"luxon": "^3.4.4",
 		"next": "^14.1.0",
 		"pdfjs-dist": "^4.0.379",
