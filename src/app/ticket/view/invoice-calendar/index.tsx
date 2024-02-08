@@ -27,6 +27,7 @@ export default InvoiceCalendar;
 function getEventAttributes(invoice: TicketInvoice): EventAttributes {
 	const ticket = invoice.tickets[0];
 	const start = DateTime.fromISO(ticket.start);
+	const location = invoice.location;
 
 	// https://github.com/adamgibbons/ics?tab=readme-ov-file#api
 	return {
@@ -35,6 +36,8 @@ function getEventAttributes(invoice: TicketInvoice): EventAttributes {
 		startInputType: 'utc',
 		duration: { hours: 3 },
 		description: `${ticket.auditorium} - ${ticket.section}`,
+		location: location?.name,
+		geo: location ? { lat: location.lat, lon: location.lon } : undefined,
 	};
 }
 

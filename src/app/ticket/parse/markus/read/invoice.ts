@@ -8,7 +8,7 @@ export function getInvoiceId(data: string[]): string {
 export function getLocation(): TicketInvoice['location'] {
 	return {
 		name: 'Forum Cinemas\n13. janvāra iela 8, Riga 1050, Latvia',
-		lat: 56.946161,
-		lon: 24.116281,
+		lat: 56.946112,
+		lon: 24.116259,
 	};
 }
