@@ -7,6 +7,9 @@ export interface TicketInvoice {
 		lat: number;
 		lon: number;
 	};
+
+	// Extra data to append to the calendar event
+	calendarEventData?: string[];
 }
 
 export interface Ticket {

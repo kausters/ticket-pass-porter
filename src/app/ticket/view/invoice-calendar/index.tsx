@@ -12,7 +12,8 @@ const InvoiceCalendar: FunctionComponent<Props> = ({ invoice }) => {
 	const getCalendarEvent: MouseEventHandler = async (event) => {
 		const filename = `invoice-${invoice.id}`;
 		const calEvent = getEventAttributes(invoice);
-		const data = await getCalendarData(calEvent);
+		const calData = await getCalendarData(calEvent);
+		const data = appendEventData(calData, invoice.calendarEventData);
 		if (event.altKey) return console.log(data);
 
 		const file = new File([data], `${filename}.ics`, { type: 'text/calendar' });
@@ -63,4 +64,18 @@ function downloadFile(file: File) {
 
 	document.body.removeChild(anchor);
 	URL.revokeObjectURL(url);
+}
+
+function appendEventData(calendarData: string, eventData?: string[]) {
+	if (!eventData?.length) return calendarData;
+
+	const lines = calendarData.split(/[\r\n]+/);
+	const index = lines.findIndex((line) => line === 'END:VEVENT');
+
+	if (index === -1) return calendarData;
+
+	const escapedEventData = eventData.map((line) => line.replace(/\n/g, '\\n'));
+
+	lines.splice(index, 0, ...escapedEventData);
+	return lines.join('\n');
 }
