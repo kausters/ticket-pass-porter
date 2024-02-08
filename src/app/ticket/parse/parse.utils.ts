@@ -4,7 +4,7 @@ import { TicketInvoiceParseData, TicketParseData } from './parse.model';
 
 export function parseInvoiceData(data: TicketInvoiceParseData): TicketInvoice {
 	return {
-		id: data.id,
+		...data,
 		tickets: data.tickets.map(parseTicketData),
 	};
 }

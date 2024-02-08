@@ -32,7 +32,7 @@ function mergeResults(
 	scanResults: Scan[],
 ): TicketInvoiceParseData {
 	return {
-		id: readResults.id,
+		...readResults,
 		tickets: readResults.tickets.map((ticket, index) => {
 			const code = scanResults[index].code || ticket.code;
 			const image = scanResults[index].image;
