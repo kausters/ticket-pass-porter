@@ -1,7 +1,7 @@
 import type { PDFPageProxy } from 'pdfjs-dist';
 import type { TextItem } from 'pdfjs-dist/types/src/display/api';
 
-import { getInvoiceId } from './invoice';
+import { getInvoiceId, getLocation } from './invoice';
 import { TicketInvoiceReadData } from './read.model';
 import { getTickets } from './tickets';
 
@@ -16,5 +16,6 @@ export async function read(page: PDFPageProxy): Promise<TicketInvoiceReadData> {
 	return {
 		id: getInvoiceId(text),
 		tickets: getTickets(text),
+		location: getLocation(),
 	};
 }

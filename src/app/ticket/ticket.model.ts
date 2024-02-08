@@ -1,6 +1,12 @@
 export interface TicketInvoice {
 	id: string;
 	tickets: Ticket[];
+
+	location?: {
+		name: string;
+		lat: number;
+		lon: number;
+	};
 }
 
 export interface Ticket {
