@@ -9,6 +9,7 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
+		"@canvas/image-data": "^1.0.0",
 		"@nuintun/qrcode": "^3.4.0",
 		"ics": "^3.7.2",
 		"luxon": "^3.4.4",

@@ -5,6 +5,15 @@ import { PDFPageProxy } from 'pdfjs-dist';
 
 import { Rect } from '../../app/ticket/parse/markus/scan/path.model';
 
+if (typeof ImageData === 'undefined') {
+	/* Next.js sometimes goes stupid and doesn't load ImageData into its server
+	actions, but sometimes it does. Using ImageData from 'canvas' package doesn't
+	work since there's a type mismatch between one Uint8ClampedArray type and
+	some other Uint8ClampedArray type. The `image-data` package works. */
+	const ImageData = require('@canvas/image-data');
+	global.ImageData = ImageData as any;
+}
+
 export async function renderPageToCanvas(page: PDFPageProxy): Promise<Canvas> {
 	const viewport = page.getViewport({ scale: 1 });
 	const canvas = new Canvas(viewport.width, viewport.height);
