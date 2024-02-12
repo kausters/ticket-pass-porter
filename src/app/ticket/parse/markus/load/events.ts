@@ -15,7 +15,7 @@ export async function getEventByTitle(
 function requestEvents(): Promise<Response> {
 	const cacheTime = 60 * 60 * 24; // 24 hours
 
-	const queryParams: EventsRequest = { area: FC_AREA };
+	const queryParams: EventsRequest = { area: FC_AREA, includeVideos: false };
 	const searchParams: Record<string, string> = Object.fromEntries(
 		Object.entries(queryParams).map(([key, value]) => [key, value.toString()]),
 	);
