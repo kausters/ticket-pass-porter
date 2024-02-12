@@ -42,19 +42,19 @@ export interface Event {
 	ratingImageUrl: string;
 	localDistributorName: string;
 	globalDistributorName: string;
-	productionCompanies: string;
+	productionCompanies?: string;
 	eventType: string;
 	genres: string;
 	shortSynopsis: string;
 	synopsis: string;
 	eventURL: string;
 	images: EventImages;
-	videos: EventVideos;
-	links: EventLinks;
-	pictures: EventPictures;
-	gallery: GalleryImages;
-	cast: Person[];
-	directors: Person[];
+	videos?: EventVideos;
+	links?: EventLinks;
+	pictures?: EventPictures;
+	gallery?: GalleryImages;
+	cast?: Person[];
+	directors?: Person[];
 	contentDescriptors?: any[];
 }
 
