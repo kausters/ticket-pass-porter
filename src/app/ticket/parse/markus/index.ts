@@ -1,6 +1,7 @@
 import { PDFDocumentProxy } from 'pdfjs-dist';
 
 import { TicketInvoiceParseData } from '../parse.model';
+import { load } from './load';
 import { read } from './read';
 import { TicketInvoiceReadData } from './read/read.model';
 import { scan } from './scan';
@@ -22,6 +23,9 @@ export async function parse(
 		console.error('Scan and read results do not match, using reads only');
 		return readResults as TicketInvoiceParseData;
 	}
+
+	const loadResults = await load(readResults);
+	console.log(loadResults);
 
 	// We get image data and a more reliable code from the scan, so we use that
 	return mergeResults(readResults, scanResults);
