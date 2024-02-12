@@ -51,5 +51,31 @@ async function parseEventsResponse(
 
 	// For some reason, it puts Event items into an events.event property. Must be using it wrong.
 	parsed.events = parsed.events.event;
+
+	(parsed as EventsResponse).events.forEach((event) => {
+		// Normally wouldn't modify the object in place, but didn't want to bother deep-cloning each item for each step
+		cleanEvent(event);
+		parseEvent(event);
+	});
+
 	return parsed;
+}
+
+function cleanEvent(event: Event): Event {
+	// Remove keys with empty values
+	Object.entries(event)
+		.filter(([, value]) => value === '')
+		.forEach(([key]) => delete event[key as keyof Event]);
+
+	return event;
+}
+
+function parseEvent(event: Event): Event {
+	// Event actually is now just strings, but TypeScript doesn't know that
+	const data = event as unknown as Record<keyof Event, string>;
+
+	event.lengthInMinutes = parseInt(data.lengthInMinutes, 10);
+	event.productionYear = parseInt(data.productionYear, 10);
+
+	return event;
 }

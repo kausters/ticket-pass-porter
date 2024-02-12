@@ -34,8 +34,8 @@ export interface Event {
 	id: string;
 	title: string;
 	originalTitle: string;
-	productionYear: string;
-	lengthInMinutes: string;
+	productionYear: number;
+	lengthInMinutes: number;
 	dtLocalRelease: string;
 	rating: string;
 	ratingLabel: string;
