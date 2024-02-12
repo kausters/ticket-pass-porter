@@ -6,5 +6,8 @@ export async function load(
 	readData: TicketInvoiceReadData,
 ): Promise<TicketInvoiceLoadData> {
 	const ticket = readData.tickets[0];
-	return await getEventByTitle(ticket.name);
+	const event = await getEventByTitle(ticket.name);
+	if (!event) return {};
+
+	return {};
 }

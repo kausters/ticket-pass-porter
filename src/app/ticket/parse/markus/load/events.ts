@@ -1,24 +1,20 @@
 import { XMLParser } from 'fast-xml-parser';
 
-import { Events, EventsRequest } from './events.model';
+import { Event, EventsRequest, EventsResponse } from './events.model';
 import { EVENTS_API_URL, FC_AREA } from './load.model';
 
-const cacheTime = 60 * 60 * 24; // 24 hours
-
-const tagNameMap: Record<string, string> = {
-	ID: 'id',
-};
-
-export async function getEventByTitle(title: string): Promise<Event> {
-	// Get events from the API
+export async function getEventByTitle(
+	title: string,
+): Promise<Event | undefined> {
 	const eventsResponse = await requestEvents();
-	const events = await parseEventsResponse(eventsResponse);
-	console.log(events);
+	const { events } = await parseEventsResponse(eventsResponse);
 
-	return {} as Event;
+	return events.find((event) => event.title === title);
 }
 
 function requestEvents(): Promise<Response> {
+	const cacheTime = 60 * 60 * 24; // 24 hours
+
 	const queryParams: EventsRequest = { area: FC_AREA };
 	const searchParams: Record<string, string> = Object.fromEntries(
 		Object.entries(queryParams).map(([key, value]) => [key, value.toString()]),
@@ -32,18 +28,28 @@ function requestEvents(): Promise<Response> {
 	});
 }
 
-async function parseEventsResponse(response: Response): Promise<Events> {
+async function parseEventsResponse(
+	response: Response,
+): Promise<EventsResponse> {
+	const tagNameMap: Record<string, string> = { ID: 'id' };
+
 	const parser = new XMLParser({
+		ignoreAttributes: true,
 		ignoreDeclaration: true,
 		parseTagValue: false,
 		parseAttributeValue: false,
 		processEntities: false,
 
 		// Convert tags from PascalCase to camelCase
-		transformTagName: (name) =>
-			tagNameMap[name] || name[0].toLowerCase() + name.slice(1),
+		transformTagName(name) {
+			return tagNameMap[name] || name[0].toLowerCase() + name.slice(1);
+		},
 	});
 
 	const text = await response.text();
-	return parser.parse(text);
+	const parsed = parser.parse(text);
+
+	// For some reason, it puts Event items into an events.event property. Must be using it wrong.
+	parsed.events = parsed.events.event;
+	return parsed;
 }

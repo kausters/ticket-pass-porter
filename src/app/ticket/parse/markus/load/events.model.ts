@@ -26,8 +26,8 @@ export interface EventsRequest {
 	includePictures?: boolean;
 }
 
-export interface Events {
-	event: Event[];
+export interface EventsResponse {
+	events: Event[];
 }
 
 export interface Event {
