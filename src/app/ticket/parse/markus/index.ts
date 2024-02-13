@@ -1,4 +1,4 @@
-import { PDFDocumentProxy } from 'pdfjs-dist';
+import { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist';
 
 import { TicketInvoiceParseData, TicketParseData } from '../parse.model';
 import { load, TicketInvoiceLoadData } from './load';
@@ -17,22 +17,33 @@ export async function parse(
 	pdf: PDFDocumentProxy,
 ): Promise<TicketInvoiceParseData> {
 	const page = await pdf.getPage(1);
+	const { readResults, loadResults, scanResults } = await getResults(page);
 
-	const [readResults, scanResults] = await Promise.all([
-		read(page),
-		scan(page),
-	]);
-
-	// Load some extra data from the API
-	const loadResults = await load(readResults);
-
-	if (scanResults.length !== readResults.tickets.length) {
+	if (scanResults?.length !== readResults.tickets.length) {
 		console.error('Scan and read results do not match, using reads only');
 		return mergeResults({ readResults, loadResults });
 	}
 
 	// Combine the results from read, load and scan into one object
 	return mergeResults({ readResults, loadResults, scanResults });
+}
+
+async function getResults(page: PDFPageProxy): Promise<ParseResults> {
+	// Start both read and scan operations immediately to run in parallel
+	const readPromise = read(page);
+	const scanPromise = scan(page);
+
+	// Wait for the read operation to complete before starting the load operation
+	const readResults = await readPromise;
+	const loadPromise = load(readResults);
+
+	// Wait for both the scan operation and the load operation to complete
+	const [scanResults, loadResults] = await Promise.all([
+		scanPromise,
+		loadPromise,
+	]);
+
+	return { readResults, loadResults, scanResults };
 }
 
 function mergeResults({
