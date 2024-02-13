@@ -1,17 +1,15 @@
 import { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist';
 
-import { TicketInvoiceParseData, TicketParseData } from '../parse.model';
-import { load, TicketInvoiceLoadData } from './load';
-import { read, TicketInvoiceReadData } from './read';
-import { Scan, scan } from './scan';
+import {
+	TicketInvoiceParseData,
+	TicketInvoiceParseResults,
+	TicketParseData,
+} from '../parse.model';
+import { load } from './load';
+import { read } from './read';
+import { scan } from './scan';
 
 export { isValid } from './is-valid';
-
-interface ParseResults {
-	readResults: TicketInvoiceReadData;
-	loadResults?: TicketInvoiceLoadData;
-	scanResults?: Scan[];
-}
 
 export async function parse(
 	pdf: PDFDocumentProxy,
@@ -28,7 +26,9 @@ export async function parse(
 	return mergeResults({ readResults, loadResults, scanResults });
 }
 
-async function getResults(page: PDFPageProxy): Promise<ParseResults> {
+async function getResults(
+	page: PDFPageProxy,
+): Promise<TicketInvoiceParseResults> {
 	// Start both read and scan operations immediately to run in parallel
 	const readPromise = read(page);
 	const scanPromise = scan(page);
@@ -50,7 +50,7 @@ function mergeResults({
 	readResults,
 	loadResults,
 	scanResults,
-}: ParseResults): TicketInvoiceParseData {
+}: TicketInvoiceParseResults): TicketInvoiceParseData {
 	return {
 		...readResults,
 		tickets: readResults.tickets.map((ticket, index) => {

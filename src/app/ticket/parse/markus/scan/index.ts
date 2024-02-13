@@ -6,8 +6,6 @@ import { getTicketCodes } from './ticket-codes';
 import { getTicketImages } from './ticket-images';
 import { getTicketRects } from './ticket-rects';
 
-export type { Scan } from './scan.model';
-
 export async function scan(page: PDFPageProxy): Promise<Scan[]> {
 	// 1. Find the rectangles of each ticket
 	const rects = await getTicketRects(page);
