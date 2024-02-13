@@ -10,14 +10,12 @@ export async function load(
 ): Promise<TicketInvoiceLoadData> {
 	const ticket = readData.tickets[0];
 	const event = await getEvent(ticket.name);
-	console.log('event', event);
 
 	// Could not find event, so we don't have duration or end time data
 	if (!event) return {};
 
 	const start = DateTime.fromISO(ticket.start);
 	const show = await getShow(event, start);
-	console.log('show', show);
 
 	// Could not find show, return event duration
 	if (!show) {

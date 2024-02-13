@@ -24,6 +24,8 @@ export interface Ticket {
 	seat: number;
 
 	start: string;
+	end?: string;
+
 	purchased: string;
 	price: number;
 	detail: string;

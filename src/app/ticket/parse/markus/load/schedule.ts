@@ -9,13 +9,18 @@ export async function getShow(
 	event: Event,
 	ticketStart: DateTime,
 ): Promise<Show | undefined> {
-	const scheduleResponse = await requestSchedule(event.id, ticketStart);
-	const { schedule } = await parseScheduleResponse(scheduleResponse);
+	try {
+		const scheduleResponse = await requestSchedule(event.id, ticketStart);
+		const { schedule } = await parseScheduleResponse(scheduleResponse);
 
-	return schedule.shows.find((show) => {
-		const showStart = DateTime.fromISO(show.dttmShowStartUTC);
-		return ticketStart.equals(showStart);
-	});
+		return schedule.shows.find((show) => {
+			const showStart = DateTime.fromISO(show.dttmShowStartUTC);
+			return ticketStart.equals(showStart);
+		});
+	} catch (error) {
+		console.error('Failed to get show', error);
+		return undefined;
+	}
 }
 
 async function requestSchedule(

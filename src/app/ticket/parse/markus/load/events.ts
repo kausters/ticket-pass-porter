@@ -4,10 +4,15 @@ import { Event, EventsRequest, EventsResponse } from './events.model';
 import { EVENTS_API_URL, FC_AREA } from './load.model';
 
 export async function getEvent(title: string): Promise<Event | undefined> {
-	const eventsResponse = await requestEvents();
-	const { events } = await parseEventsResponse(eventsResponse);
+	try {
+		const eventsResponse = await requestEvents();
+		const { events } = await parseEventsResponse(eventsResponse);
 
-	return events.find((event) => event.title === title);
+		return events.find((event) => event.title === title);
+	} catch (error) {
+		console.error('Failed to get event', error);
+		return undefined;
+	}
 }
 
 function requestEvents(): Promise<Response> {
