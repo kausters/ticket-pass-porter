@@ -24,7 +24,7 @@ async function requestSchedule(
 ): Promise<Response> {
 	const queryParams: ScheduleRequest = {
 		eventID: eventId,
-		dt: start.toFormat('d.M.yyyy'),
+		dt: start.toFormat('dd.MM.yyyy'),
 	};
 
 	const searchParams: Record<string, string> = Object.fromEntries(
@@ -61,6 +61,16 @@ async function parseScheduleResponse(
 
 	const text = await response.text();
 	const parsed = parser.parse(text);
+
+	if (!parsed.schedule?.shows) {
+		// No shows found
+		return {
+			schedule: {
+				pubDate: '',
+				shows: [] as Show[],
+			},
+		};
+	}
 
 	// For some reason, it puts Show items into an shows.show property. Must be using it wrong.
 	parsed.schedule.shows = parsed.schedule.shows.show;

@@ -47,6 +47,11 @@ async function parseEventsResponse(
 	const text = await response.text();
 	const parsed = parser.parse(text);
 
+	if (!parsed.events?.event) {
+		// No events found
+		return { events: [] };
+	}
+
 	// For some reason, it puts Event items into an events.event property. Must be using it wrong.
 	parsed.events = parsed.events.event;
 
