@@ -7,6 +7,7 @@ import styles from './ticket-data.module.scss';
 
 const TicketData: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 	const start = DateTime.fromISO(data.start);
+	const end = data.end ? DateTime.fromISO(data.end) : null;
 	const purchased = DateTime.fromISO(data.purchased);
 
 	return (
@@ -33,17 +34,19 @@ const TicketData: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 				<thead>
 					<tr>
 						<th>Rinda</th>
-						<th>Vietas</th>
-						<th>Seansa laiks</th>
+						<th>Vieta</th>
 						<th>Seansa datums</th>
+						<th>Sākums</th>
+						{end && <th>Beigas</th>}
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td>{data.row}</td>
 						<td>{data.seat}</td>
-						<td>{start.toFormat('HH:mm')}</td>
 						<td>{start.toFormat('dd.MM')}</td>
+						<td>{start.toFormat('HH:mm')}</td>
+						{end && <td>{end.toFormat('HH:mm')}</td>}
 					</tr>
 				</tbody>
 			</table>
