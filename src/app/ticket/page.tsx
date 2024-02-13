@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 
 import Import from './import';
 import Load from './load';
@@ -12,7 +12,10 @@ export default function TicketPage() {
 	return (
 		<div>
 			<h1>Ticket</h1>
-			<Invoice></Invoice>
+
+			<Suspense>
+				<Invoice></Invoice>
+			</Suspense>
 		</div>
 	);
 }
