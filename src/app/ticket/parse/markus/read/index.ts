@@ -5,6 +5,8 @@ import { getCalendarEventData, getInvoiceId, getLocation } from './invoice';
 import { TicketInvoiceReadData } from './read.model';
 import { getTickets } from './tickets';
 
+export type { TicketInvoiceReadData } from './read.model';
+
 export async function read(page: PDFPageProxy): Promise<TicketInvoiceReadData> {
 	const textContent = await page.getTextContent();
 

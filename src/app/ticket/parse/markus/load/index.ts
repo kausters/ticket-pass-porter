@@ -5,6 +5,8 @@ import { getEvent } from './events';
 import { EXTRA_DURATION, TicketInvoiceLoadData } from './load.model';
 import { getShow } from './schedule';
 
+export type { TicketInvoiceLoadData } from './load.model';
+
 export async function load(
 	readData: TicketInvoiceReadData,
 ): Promise<TicketInvoiceLoadData> {
