@@ -3,9 +3,7 @@ import { XMLParser } from 'fast-xml-parser';
 import { Event, EventsRequest, EventsResponse } from './events.model';
 import { EVENTS_API_URL, FC_AREA } from './load.model';
 
-export async function getEventByTitle(
-	title: string,
-): Promise<Event | undefined> {
+export async function getEvent(title: string): Promise<Event | undefined> {
 	const eventsResponse = await requestEvents();
 	const { events } = await parseEventsResponse(eventsResponse);
 
@@ -13,8 +11,6 @@ export async function getEventByTitle(
 }
 
 function requestEvents(): Promise<Response> {
-	const cacheTime = 60 * 60 * 24; // 24 hours
-
 	const queryParams: EventsRequest = { area: FC_AREA, includeVideos: false };
 	const searchParams: Record<string, string> = Object.fromEntries(
 		Object.entries(queryParams).map(([key, value]) => [key, value.toString()]),
@@ -23,15 +19,15 @@ function requestEvents(): Promise<Response> {
 	const url = new URL(EVENTS_API_URL);
 	url.search = new URLSearchParams(searchParams).toString();
 
-	return fetch(url, {
-		next: { revalidate: cacheTime },
-	});
+	const cacheTime = 60 * 60 * 24; // 24 hours
+	return fetch(url, { next: { revalidate: cacheTime } });
 }
 
 async function parseEventsResponse(
 	response: Response,
 ): Promise<EventsResponse> {
 	const tagNameMap: Record<string, string> = { ID: 'id' };
+	const arrays = ['events.event'];
 
 	const parser = new XMLParser({
 		ignoreAttributes: true,
@@ -39,6 +35,8 @@ async function parseEventsResponse(
 		parseTagValue: false,
 		parseAttributeValue: false,
 		processEntities: false,
+
+		isArray: (name, path) => arrays.includes(path),
 
 		// Convert tags from PascalCase to camelCase
 		transformTagName(name) {

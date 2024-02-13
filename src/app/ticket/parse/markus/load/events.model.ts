@@ -1,4 +1,4 @@
-export const enum EventListType {
+const enum EventListType {
 	NowInTheatres = 'NowInTheatres',
 	ComingSoon = 'ComingSoon',
 }
