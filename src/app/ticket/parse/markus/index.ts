@@ -7,7 +7,7 @@ import { Scan, scan } from './scan';
 
 export { isValid } from './is-valid';
 
-interface MergeResultsParams {
+interface ParseResults {
 	readResults: TicketInvoiceReadData;
 	loadResults?: TicketInvoiceLoadData;
 	scanResults?: Scan[];
@@ -39,7 +39,7 @@ function mergeResults({
 	readResults,
 	loadResults,
 	scanResults,
-}: MergeResultsParams): TicketInvoiceParseData {
+}: ParseResults): TicketInvoiceParseData {
 	return {
 		...readResults,
 		tickets: readResults.tickets.map((ticket, index) => {
