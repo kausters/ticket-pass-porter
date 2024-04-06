@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals';
 import { useSearchParams } from 'next/navigation';
 
+import mockComponent from '../../lib/mock/mock-component';
 import TicketImport from './import';
 import TicketLoad from './load';
 import TicketView from './view';
@@ -13,11 +14,11 @@ jest.mock('next/navigation', () => ({
 	useSearchParams: () => useSearchPramsMock,
 }));
 
-export const importMock: jest.Mocked<typeof TicketImport> = jest.fn(() => <></>);
+export const importMock = mockComponent<typeof TicketImport>();
 jest.mock('./import', () => importMock);
 
-export const loadMock: jest.Mocked<typeof TicketLoad> = jest.fn(() => <></>);
+export const loadMock = mockComponent<typeof TicketLoad>();
 jest.mock('./load', () => loadMock);
 
-export const viewMock: jest.Mocked<typeof TicketView> = jest.fn(() => <></>);
+export const viewMock = mockComponent<typeof TicketView>();
 jest.mock('./view', () => viewMock);
