@@ -1,5 +1,6 @@
 import { createEvent, EventAttributes } from 'ics';
 import { DateTime } from 'luxon';
+import { unique } from 'radashi';
 import { FunctionComponent, MouseEventHandler } from 'react';
 
 import { TicketInvoice } from '../../ticket.model';
@@ -11,8 +12,8 @@ interface Props {
 const InvoiceCalendar: FunctionComponent<Props> = ({ invoice }) => {
 	const getCalendarEvent: MouseEventHandler = async (event) => {
 		const filename = `invoice-${invoice.id}`;
-		const calEvent = getEventAttributes(invoice);
-		const calData = await getCalendarData(calEvent[0]);
+		const calEvents = getEventAttributes(invoice);
+		const calData = await getCalendarData(calEvents[0]);
 		const data = appendEventData(calData, invoice.calendarEventData);
 		if (event.altKey) return console.log(data);
 
@@ -29,7 +30,7 @@ function getEventAttributes(invoice: TicketInvoice): EventAttributes[] {
 	const location = invoice.location;
 	const locationData = location ? { location: location.name, geo: { lat: location.lat, lon: location.lon } } : {};
 
-	return invoice.tickets.map((ticket) => {
+	const events: EventAttributes[] = invoice.tickets.map((ticket) => {
 		const start = DateTime.fromISO(ticket.start);
 
 		const end = ticket.end ? DateTime.fromISO(ticket.end) : null;
@@ -45,6 +46,9 @@ function getEventAttributes(invoice: TicketInvoice): EventAttributes[] {
 			...locationData,
 		};
 	});
+
+	// Filter out duplicate events (multiple tickets for the same event)
+	return unique(events, (event) => JSON.stringify([event.title, event.start, event.location]));
 }
 
 async function getCalendarData(event: EventAttributes) {
