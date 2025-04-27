@@ -12,7 +12,7 @@ const InvoiceCalendar: FunctionComponent<Props> = ({ invoice }) => {
 	const getCalendarEvent: MouseEventHandler = async (event) => {
 		const filename = `invoice-${invoice.id}`;
 		const calEvent = getEventAttributes(invoice);
-		const calData = await getCalendarData(calEvent);
+		const calData = await getCalendarData(calEvent[0]);
 		const data = appendEventData(calData, invoice.calendarEventData);
 		if (event.altKey) return console.log(data);
 
@@ -25,29 +25,26 @@ const InvoiceCalendar: FunctionComponent<Props> = ({ invoice }) => {
 
 export default InvoiceCalendar;
 
-function getEventAttributes(invoice: TicketInvoice): EventAttributes {
-	const ticket = invoice.tickets[0];
-	const start = DateTime.fromISO(ticket.start);
-
-	const end = ticket.end ? DateTime.fromISO(ticket.end) : null;
-	const endData = end
-		? { end: end.toUTC().toMillis(), endInputType: 'utc' as const }
-		: { duration: { hours: 3 } };
-
+function getEventAttributes(invoice: TicketInvoice): EventAttributes[] {
 	const location = invoice.location;
-	const locationData = location
-		? { location: location.name, geo: { lat: location.lat, lon: location.lon } }
-		: {};
+	const locationData = location ? { location: location.name, geo: { lat: location.lat, lon: location.lon } } : {};
 
-	// https://github.com/adamgibbons/ics?tab=readme-ov-file#api
-	return {
-		title: ticket.name,
-		start: start.toUTC().toMillis(),
-		startInputType: 'utc',
-		description: `${ticket.auditorium} - ${ticket.section}`,
-		...endData,
-		...locationData,
-	};
+	return invoice.tickets.map((ticket) => {
+		const start = DateTime.fromISO(ticket.start);
+
+		const end = ticket.end ? DateTime.fromISO(ticket.end) : null;
+		const endData = end ? { end: end.toUTC().toMillis(), endInputType: 'utc' as const } : { duration: { hours: 3 } };
+
+		// https://github.com/adamgibbons/ics?tab=readme-ov-file#api
+		return {
+			title: ticket.name,
+			start: start.toUTC().toMillis(),
+			startInputType: 'utc',
+			description: `${ticket.auditorium} - ${ticket.section}`,
+			...endData,
+			...locationData,
+		};
+	});
 }
 
 async function getCalendarData(event: EventAttributes) {
