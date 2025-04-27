@@ -5,30 +5,31 @@ import { getEvent } from './events';
 import { EXTRA_DURATION, TicketInvoiceLoadData } from './load.model';
 import { getShow } from './schedule';
 
-export async function load(
-	readData: TicketInvoiceReadData,
-): Promise<TicketInvoiceLoadData> {
-	const ticket = readData.tickets[0];
-	const event = await getEvent(ticket.name);
+export async function load(readData: TicketInvoiceReadData): Promise<TicketInvoiceLoadData[]> {
+	const promises = readData.tickets.map(async (ticket) => {
+		const event = await getEvent(ticket.name);
 
-	// Could not find event, so we don't have duration or end time data
-	if (!event) return {};
+		// Could not find the event, so we don't have duration or end time data
+		if (!event) return {};
 
-	const start = DateTime.fromISO(ticket.start);
-	const show = await getShow(event, start);
+		const start = DateTime.fromISO(ticket.start);
+		const show = await getShow(event, start);
 
-	// Could not find show, return event duration
-	if (!show) {
-		const duration = event.lengthInMinutes + EXTRA_DURATION;
-		const endTime = start.plus({ minutes: duration });
+		// Could not find show, return event duration
+		if (!show) {
+			const duration = event.lengthInMinutes + EXTRA_DURATION;
+			const endTime = start.plus({ minutes: duration });
+			const end = processTime(endTime).toISO();
+			return end ? { end } : {};
+		}
+
+		// Found show, return its actual end time
+		const endTime = DateTime.fromISO(show.dttmShowEndUTC);
 		const end = processTime(endTime).toISO();
 		return end ? { end } : {};
-	}
+	});
 
-	// Found show, return its actual end time
-	const endTime = DateTime.fromISO(show.dttmShowEndUTC);
-	const end = processTime(endTime).toISO();
-	return end ? { end } : {};
+	return Promise.all(promises);
 }
 
 /**
