@@ -13,6 +13,6 @@ export type TicketInvoiceParseData = Omit<TicketInvoice, 'tickets'> & {
 
 export interface TicketInvoiceParseResults {
 	readResults: TicketInvoiceReadData;
-	loadResults?: TicketInvoiceLoadData;
+	loadResults: TicketInvoiceLoadData[];
 	scanResults?: Scan[];
 }
