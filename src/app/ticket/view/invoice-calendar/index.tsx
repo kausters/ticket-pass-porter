@@ -78,13 +78,8 @@ function downloadFile(file: File) {
 function appendEventData(calendarData: string, eventData?: string[]) {
 	if (!eventData?.length) return calendarData;
 
-	const lines = calendarData.split(/[\r\n]+/);
-	const index = lines.findIndex((line) => line === 'END:VEVENT');
+	const escapedEventData = eventData.map((line) => line.replace(/\n/g, '\\n')).join('\n');
 
-	if (index === -1) return calendarData;
-
-	const escapedEventData = eventData.map((line) => line.replace(/\n/g, '\\n'));
-
-	lines.splice(index, 0, ...escapedEventData);
-	return lines.join('\n');
+	// Replace each END:VEVENT with the custom data + END:VEVENT
+	return calendarData.replace(/END:VEVENT/g, `${escapedEventData}\nEND:VEVENT`);
 }
