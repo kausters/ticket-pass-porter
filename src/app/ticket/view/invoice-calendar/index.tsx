@@ -1,4 +1,4 @@
-import { createEvent, EventAttributes } from 'ics';
+import { createEvents, EventAttributes } from 'ics';
 import { DateTime } from 'luxon';
 import { unique } from 'radashi';
 import { FunctionComponent, MouseEventHandler } from 'react';
@@ -13,7 +13,7 @@ const InvoiceCalendar: FunctionComponent<Props> = ({ invoice }) => {
 	const getCalendarEvent: MouseEventHandler = async (event) => {
 		const filename = `invoice-${invoice.id}`;
 		const calEvents = getEventAttributes(invoice);
-		const calData = await getCalendarData(calEvents[0]);
+		const calData = await getCalendarData(calEvents);
 		const data = appendEventData(calData, invoice.calendarEventData);
 		if (event.altKey) return console.log(data);
 
@@ -51,9 +51,9 @@ function getEventAttributes(invoice: TicketInvoice): EventAttributes[] {
 	return unique(events, (event) => JSON.stringify([event.title, event.start, event.location]));
 }
 
-async function getCalendarData(event: EventAttributes) {
+async function getCalendarData(events: EventAttributes[]) {
 	return new Promise<string>((resolve, reject) => {
-		createEvent(event, (error, value) => {
+		createEvents(events, (error, value) => {
 			if (error) reject(error);
 			else resolve(value);
 		});
