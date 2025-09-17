@@ -87,8 +87,20 @@ async function appendEventData(calendarData: string, eventData?: string[], attac
 
 	// Add file attachment if provided
 	if (attachmentFile) {
-		const base64Data = await fileToBase64(attachmentFile);
-		const attachmentProperty = `ATTACH;FMTTYPE=${attachmentFile.type};ENCODING=BASE64;VALUE=BINARY;SIZE=${attachmentFile.size};X-APPLE-FILENAME=${attachmentFile.name}:${base64Data}`;
+		const attachmentParams: Record<string, string> = {
+			FMTTYPE: attachmentFile.type,
+			ENCODING: 'BASE64',
+			VALUE: 'BINARY',
+			SIZE: attachmentFile.size.toString(),
+			'X-APPLE-FILENAME': attachmentFile.name,
+		};
+		const paramData = Object.entries(attachmentParams)
+			.map(([key, value]) => `${key}=${value}`)
+			.join(';');
+
+		const fileData = await fileToBase64(attachmentFile);
+		const attachmentProperty = `ATTACH;${paramData}:${fileData}`;
+
 		modifiedData = modifiedData.replace(/END:VEVENT/g, `${attachmentProperty}\nEND:VEVENT`);
 	}
 
