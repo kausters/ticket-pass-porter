@@ -7,6 +7,7 @@ import { TicketInvoice } from '../../ticket.model';
 
 interface Props {
 	invoice: TicketInvoice;
+	originalFile?: File;
 }
 
 const InvoiceCalendar: FunctionComponent<Props> = ({ invoice }) => {
