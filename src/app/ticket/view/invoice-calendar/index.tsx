@@ -10,12 +10,12 @@ interface Props {
 	originalFile?: File;
 }
 
-const InvoiceCalendar: FunctionComponent<Props> = ({ invoice }) => {
+const InvoiceCalendar: FunctionComponent<Props> = ({ invoice, originalFile }) => {
 	const getCalendarEvent: MouseEventHandler = async (event) => {
 		const filename = `invoice-${invoice.id}`;
 		const calEvents = getEventAttributes(invoice);
 		const calData = await getCalendarData(calEvents);
-		const data = appendEventData(calData, invoice.calendarEventData);
+		const data = await appendEventData(calData, invoice.calendarEventData, originalFile);
 		if (event.altKey) return console.log(data);
 
 		const file = new File([data], `${filename}.ics`, { type: 'text/calendar' });
@@ -76,11 +76,35 @@ function downloadFile(file: File) {
 	URL.revokeObjectURL(url);
 }
 
-function appendEventData(calendarData: string, eventData?: string[]) {
-	if (!eventData?.length) return calendarData;
+async function appendEventData(calendarData: string, eventData?: string[], attachmentFile?: File) {
+	let modifiedData = calendarData;
 
-	const escapedEventData = eventData.map((line) => line.replace(/\n/g, '\\n')).join('\n');
+	// Add custom event data if provided
+	if (eventData?.length) {
+		const escapedEventData = eventData.map((line) => line.replace(/\n/g, '\\n')).join('\n');
+		modifiedData = modifiedData.replace(/END:VEVENT/g, `${escapedEventData}\nEND:VEVENT`);
+	}
 
-	// Replace each END:VEVENT with the custom data + END:VEVENT
-	return calendarData.replace(/END:VEVENT/g, `${escapedEventData}\nEND:VEVENT`);
+	// Add file attachment if provided
+	if (attachmentFile) {
+		const base64Data = await fileToBase64(attachmentFile);
+		const attachmentProperty = `ATTACH;FMTTYPE=${attachmentFile.type};ENCODING=BASE64;VALUE=BINARY:${base64Data}`;
+		modifiedData = modifiedData.replace(/END:VEVENT/g, `${attachmentProperty}\nEND:VEVENT`);
+	}
+
+	return modifiedData;
+}
+
+function fileToBase64(file: File): Promise<string> {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onload = () => {
+			const result = reader.result as string;
+			// Remove the data URL prefix (e.g., "data:application/pdf;base64,")
+			const base64 = result.split(',')[1];
+			resolve(base64);
+		};
+		reader.onerror = reject;
+		reader.readAsDataURL(file);
+	});
 }
