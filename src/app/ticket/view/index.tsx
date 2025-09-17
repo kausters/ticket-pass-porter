@@ -9,13 +9,14 @@ import styles from './view.module.scss';
 
 interface Props {
 	invoice: TicketInvoice;
+	importedFile?: File;
 }
 
-const TicketView: FunctionComponent<Props> = ({ invoice }) => {
+const TicketView: FunctionComponent<Props> = ({ invoice, importedFile }) => {
 	return (
 		<div>
 			<h1>Invoice #{invoice.id}</h1>
-			<InvoiceCalendar invoice={invoice} />
+			<InvoiceCalendar invoice={invoice} importedFile={importedFile} />
 
 			<ul className={styles.tickets}>
 				{invoice.tickets.map((ticket) => (
