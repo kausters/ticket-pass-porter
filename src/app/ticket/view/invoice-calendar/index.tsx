@@ -7,19 +7,19 @@ import { TicketInvoice } from '../../ticket.model';
 
 interface Props {
 	invoice: TicketInvoice;
-	originalFile?: File;
+	importedFile?: File;
 }
 
-const InvoiceCalendar: FunctionComponent<Props> = ({ invoice, originalFile }) => {
+const InvoiceCalendar: FunctionComponent<Props> = ({ invoice, importedFile }) => {
 	const getCalendarEvent: MouseEventHandler = async (event) => {
 		const filename = `invoice-${invoice.id}`;
 		const calEvents = getEventAttributes(invoice);
 		const calData = await getCalendarData(calEvents);
-		const data = await appendEventData(calData, invoice.calendarEventData, originalFile);
+		const data = await appendEventData(calData, invoice.calendarEventData, importedFile);
 		if (event.altKey) return console.log(data);
 
-		const file = new File([data], `${filename}.ics`, { type: 'text/calendar' });
-		downloadFile(file);
+		const calendarFile = new File([data], `${filename}.ics`, { type: 'text/calendar' });
+		downloadFile(calendarFile);
 	};
 
 	return <button onClick={getCalendarEvent}>Calendar</button>;

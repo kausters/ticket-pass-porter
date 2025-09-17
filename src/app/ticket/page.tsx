@@ -28,7 +28,7 @@ function Invoice() {
 	const [invoice, setInvoice] = useState<TicketInvoice>();
 
 	if (invoice) {
-		return <View invoice={invoice} originalFile={file}></View>;
+		return <View invoice={invoice} importedFile={file}></View>;
 	} else if (file || id) {
 		return <Load file={file} id={id} onLoad={setInvoice}></Load>;
 	} else {
