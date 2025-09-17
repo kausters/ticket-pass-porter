@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 .container {
 	display: block;
 	width: 440px;
@@ -64,10 +66,11 @@
 	border-spacing: 0;
 	text-align: center;
 
-	th, td {
+	th,
+	td {
 		width: 25%;
 		padding: 0.5rem;
-		border-bottom: 1px solid currentColor
+		border-bottom: 1px solid currentColor;
 	}
 
 	th {
@@ -82,7 +85,7 @@
 
 .detail {
 	font-size: 0.75rem;
-	line-height: (4/3);
+	line-height: math.div(4, 3);
 	text-align: center;
 	white-space: pre-line;
 }
