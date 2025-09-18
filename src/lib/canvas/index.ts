@@ -1,11 +1,9 @@
 import { Canvas as NodeCanvas } from 'canvas';
 import { PDFPageProxy } from 'pdfjs-dist';
 
-import { Rect } from '../../app/ticket/parse/markus/scan/path.model';
+import { Rect } from '../../app/(converter)/parse/markus/scan/path.model';
 
-export async function renderPageToCanvas(
-	page: PDFPageProxy,
-): Promise<HTMLCanvasElement | NodeCanvas> {
+export async function renderPageToCanvas(page: PDFPageProxy): Promise<HTMLCanvasElement | NodeCanvas> {
 	if (isServer()) {
 		const { renderPageToCanvas } = await import('./server');
 		return renderPageToCanvas(page);
@@ -15,10 +13,7 @@ export async function renderPageToCanvas(
 	}
 }
 
-export async function getRectImageData(
-	rect: Rect,
-	canvas: HTMLCanvasElement | NodeCanvas,
-): Promise<Uint8ClampedArray> {
+export async function getRectImageData(rect: Rect, canvas: HTMLCanvasElement | NodeCanvas): Promise<Uint8ClampedArray> {
 	if (isServer()) {
 		const { getRectImageData } = await import('./server');
 		return getRectImageData(rect, canvas as NodeCanvas);
