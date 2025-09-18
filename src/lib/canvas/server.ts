@@ -3,7 +3,7 @@
 import { Canvas } from 'canvas';
 import { PDFPageProxy } from 'pdfjs-dist';
 
-import { Rect } from '../../app/ticket/parse/markus/scan/path.model';
+import { Rect } from '../../app/(converter)/parse/markus/scan/path.model';
 
 if (typeof ImageData === 'undefined') {
 	/* Next.js sometimes goes stupid and doesn't load ImageData into its server
@@ -28,10 +28,7 @@ export async function renderPageToCanvas(page: PDFPageProxy): Promise<Canvas> {
 	return canvas;
 }
 
-export async function getRectImageData(
-	rect: Rect,
-	canvas: Canvas,
-): Promise<Uint8ClampedArray> {
+export async function getRectImageData(rect: Rect, canvas: Canvas): Promise<Uint8ClampedArray> {
 	const context = canvas.getContext('2d');
 	const { x, y, width, height } = rect;
 	const image = context.getImageData(x, y, width, height);

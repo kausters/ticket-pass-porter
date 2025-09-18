@@ -1,24 +1,20 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { Suspense, useState } from 'react';
+import { FunctionComponent, Suspense, useState } from 'react';
 
 import Import from './import';
 import Load from './load';
 import { TicketInvoice } from './ticket.model';
 import View from './view';
 
-export default function TicketPage() {
+export const Converter: FunctionComponent = () => {
 	return (
-		<div>
-			<h1>Ticket</h1>
-
-			<Suspense>
-				<Invoice></Invoice>
-			</Suspense>
-		</div>
+		<Suspense>
+			<Invoice></Invoice>
+		</Suspense>
 	);
-}
+};
 
 function Invoice() {
 	const searchParams = useSearchParams();

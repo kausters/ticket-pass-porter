@@ -1,17 +1,17 @@
-import './page.test.mock';
+import './converter.test.mock';
 
 import { describe, expect, it } from '@jest/globals';
 import { fireEvent, render } from '@testing-library/react';
 
-import TicketPage from './page';
-import { importMock, loadMock, useSearchPramsMock, viewMock } from './page.test.mock';
+import { Converter } from './converter';
+import { importMock, loadMock, useSearchPramsMock, viewMock } from './converter.test.mock';
 
-describe('TicketPage', () => {
+describe('Converter', () => {
 	describe('Import', () => {
 		it('renders Import if no file or ID is present', () => {
 			// Import is rendered by default so we don't need to mock anything extra
 			importMock.mockReturnValue(<div data-test-id="import" />);
-			const { getByTestId } = render(<TicketPage />);
+			const { getByTestId } = render(<Converter />);
 
 			// Expect Import to be rendered
 			expect(importMock).toHaveBeenCalled();
@@ -25,7 +25,7 @@ describe('TicketPage', () => {
 			useSearchPramsMock.get.mockImplementation((key) => (key === 'id' ? '1' : null));
 
 			loadMock.mockReturnValue(<div data-test-id="load" />);
-			const { getByTestId } = render(<TicketPage />);
+			const { getByTestId } = render(<Converter />);
 
 			// Expect Load to be rendered with the ID from the search params
 			// @ts-ignore -- idk what's happening here
@@ -39,7 +39,7 @@ describe('TicketPage', () => {
 			importMock.mockImplementation(({ onImport }) => <button onClick={() => onImport(file)} />);
 
 			loadMock.mockReturnValue(<div data-test-id="load" />);
-			const { getByRole, getByTestId } = render(<TicketPage />);
+			const { getByRole, getByTestId } = render(<Converter />);
 
 			// Click the Import button to trigger the file import
 			const importButton = getByRole('button');
@@ -62,7 +62,7 @@ describe('TicketPage', () => {
 			loadMock.mockImplementation(({ onLoad }) => <button onClick={() => onLoad(invoice)} />);
 
 			viewMock.mockReturnValue(<div data-test-id="view" />);
-			const { getByRole, getByTestId } = render(<TicketPage />);
+			const { getByRole, getByTestId } = render(<Converter />);
 
 			// Click the Load button to trigger the invoice load
 			const loadButton = getByRole('button');
