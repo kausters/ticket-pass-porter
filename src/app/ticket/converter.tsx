@@ -10,13 +10,9 @@ import View from './view';
 
 export const Converter: FunctionComponent = () => {
 	return (
-		<div>
-			<h1>Ticket</h1>
-
-			<Suspense>
-				<Invoice></Invoice>
-			</Suspense>
-		</div>
+		<Suspense>
+			<Invoice></Invoice>
+		</Suspense>
 	);
 };
 
