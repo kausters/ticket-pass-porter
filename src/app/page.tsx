@@ -1,15 +1,10 @@
-import Link from 'next/link';
-
 import styles from './page.module.css';
+import { Converter } from './ticket/converter';
 
 export default function App() {
 	return (
 		<main className={styles.main}>
-			<ul>
-				<li>
-					<Link href="/ticket/">Upload ticket</Link>
-				</li>
-			</ul>
+			<Converter />
 		</main>
 	);
 }
