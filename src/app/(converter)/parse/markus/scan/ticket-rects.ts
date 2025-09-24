@@ -9,6 +9,7 @@ type LineOpArgs = [ops: LineArgsOps, coords: LineArgsCoords];
 
 export async function getTicketRects(page: PDFPageProxy) {
 	const operators = await page.getOperatorList();
+	const lineWidth = extractLineWidth(operators);
 
 	const lines = operators.argsArray
 		.filter((args, index) => operators.fnArray[index] === ops.constructPath)
@@ -16,7 +17,7 @@ export async function getTicketRects(page: PDFPageProxy) {
 		.map(lineOpArgToLine);
 
 	const intersects = findIntersectingLines(lines);
-	return intersects.map(getRectFromLines);
+	return intersects.map((lines) => getRectFromLines(lines, lineWidth));
 }
 
 function isLineOpArg(args: unknown[]): args is LineOpArgs {
@@ -45,10 +46,9 @@ function doLinesIntersect(line1: Line, line2: Line) {
 	let d3 = direction(line2.start, line2.end, line1.start);
 	let d4 = direction(line2.start, line2.end, line1.end);
 
-	return (
-		((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) &&
-		((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0))
-	);
+	const line1CrossesLine2 = (d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0);
+	const line2CrossesLine1 = (d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0);
+	return line1CrossesLine2 && line2CrossesLine1;
 }
 
 function findIntersectingLines(lines: Line[]) {
@@ -66,7 +66,16 @@ function findIntersectingLines(lines: Line[]) {
 	return intersectingLines;
 }
 
-function getRectFromLines(lines: Line[]) {
+function extractLineWidth(operators: Awaited<ReturnType<PDFPageProxy['getOperatorList']>>): number {
+	for (let i = 0; i < operators.fnArray.length; i++) {
+		if (operators.fnArray[i] === ops.setLineWidth) {
+			return operators.argsArray[i][0];
+		}
+	}
+	return 0;
+}
+
+function getRectFromLines(lines: Line[], lineWidth: number) {
 	const initialExtremes = {
 		minX: Number.MAX_VALUE,
 		minY: Number.MAX_VALUE,
@@ -83,10 +92,12 @@ function getRectFromLines(lines: Line[]) {
 		};
 	}, initialExtremes);
 
-	const x = minX;
-	const y = minY;
-	const width = maxX - minX;
-	const height = maxY - minY;
+	// Create inner rectangle by subtracting line width with modifier from each side
+	const adjustedLineWidth = lineWidth * 4;
+	const x = minX + adjustedLineWidth;
+	const y = minY + adjustedLineWidth;
+	const width = maxX - minX - adjustedLineWidth * 2;
+	const height = maxY - minY - adjustedLineWidth * 2;
 
 	return { x, y, width, height };
 }
