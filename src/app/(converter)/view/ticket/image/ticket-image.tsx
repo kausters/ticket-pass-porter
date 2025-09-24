@@ -1,16 +1,22 @@
 'use client';
 
+import clsx from 'clsx';
 import { FunctionComponent } from 'react';
 import { assert } from 'ts-essentials';
+
+import styles from './ticket-image.module.scss';
 
 interface Props {
 	data: ImageData;
 	alt?: string;
+	className?: string;
 }
 
-const TicketImage: FunctionComponent<Props> = ({ data, alt }) => {
+const TicketImage: FunctionComponent<Props> = ({ data, alt, className }) => {
 	const imageDataUrl = getImageDataUrl(data);
-	return <img src={imageDataUrl} alt={alt} />;
+
+	// eslint-disable-next-line @next/next/no-img-element -- locally generated image of a QR code
+	return <img src={imageDataUrl} alt={alt} className={clsx(styles.image, className)} />;
 };
 
 export default TicketImage;

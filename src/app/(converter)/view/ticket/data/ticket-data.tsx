@@ -5,7 +5,11 @@ import { Ticket } from '../../../ticket.model';
 import Qr from './qr/qr';
 import styles from './ticket-data.module.scss';
 
-const TicketData: FunctionComponent<{ data: Ticket }> = ({ data }) => {
+interface Props {
+	data: Ticket;
+}
+
+const TicketData: FunctionComponent<Props> = ({ data }) => {
 	const start = DateTime.fromISO(data.start);
 	const end = data.end ? DateTime.fromISO(data.end) : null;
 	const purchased = DateTime.fromISO(data.purchased);

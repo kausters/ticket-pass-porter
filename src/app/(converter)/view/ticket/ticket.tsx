@@ -7,8 +7,8 @@ import styles from './ticket.module.scss';
 
 const TicketComponent: FunctionComponent<{ data: Ticket }> = ({ data }) => (
 	<article className={styles.container}>
-		<TicketData data={data}></TicketData>
-		<TicketImage data={data.image} alt="Original ticket scan"></TicketImage>
+		<TicketData data={data} />
+		<TicketImage data={data.image} className={styles.image} alt="Original ticket scan" />
 	</article>
 );
 
