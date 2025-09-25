@@ -1,6 +1,7 @@
 .container {
-	display: block;
+	display: flex;
 	width: 440px;
+	gap: 1rem;
 	perspective: 3200px;
 }
 
@@ -8,10 +9,10 @@
 	position: relative;
 	transform-style: preserve-3d;
 	transition: transform 0.5s ease-out;
-}
 
-.container:hover .ticket {
-	transform: rotateY(180deg);
+	&.showOriginal {
+		transform: rotateY(180deg);
+	}
 }
 
 .data {
@@ -31,4 +32,8 @@
 
 	// Prevent the image from being re-requested during rotation by keeping it in a composited layer
 	will-change: transform;
+}
+
+.menu {
+	width: 2rem;
 }
