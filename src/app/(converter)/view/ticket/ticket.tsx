@@ -7,7 +7,7 @@ import TicketImage from './image/ticket-image';
 import styles from './ticket.module.scss';
 
 const TicketComponent: FunctionComponent<{ data: Ticket }> = ({ data }) => {
-	const [showOriginal, TicketOriginal, handleToggleOriginal] = useToggleOriginal();
+	const [TicketOriginal, showOriginal, handleToggleOriginal] = useTicketOriginal();
 
 	return (
 		<article className={styles.container}>
@@ -25,7 +25,7 @@ const TicketComponent: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 
 export default TicketComponent;
 
-function useToggleOriginal() {
+function useTicketOriginal() {
 	const [showOriginal, setShowOriginal] = useState(false);
 	const hasShownRef = useRef(false);
 
@@ -41,5 +41,5 @@ function useToggleOriginal() {
 		return <TicketImage {...props} />;
 	};
 
-	return [showOriginal, TicketOriginal, handleToggleOriginal] as const;
+	return [TicketOriginal, showOriginal, handleToggleOriginal] as const;
 }
