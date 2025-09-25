@@ -4,6 +4,7 @@ import { FunctionComponent, useRef, useState } from 'react';
 import { Ticket } from '../../ticket.model';
 import TicketData from './data/ticket-data';
 import TicketImage from './image/ticket-image';
+import infoIcon from './info.svg';
 import styles from './ticket.module.scss';
 
 const TicketComponent: FunctionComponent<{ data: Ticket }> = ({ data }) => {
@@ -17,7 +18,9 @@ const TicketComponent: FunctionComponent<{ data: Ticket }> = ({ data }) => {
 			</div>
 
 			<menu className={styles.menu}>
-				<button onClick={handleToggleOriginal}>Show original</button>
+				<button onClick={handleToggleOriginal} title="Show original">
+					<img src={infoIcon.src} alt="Info" />
+				</button>
 			</menu>
 		</article>
 	);
