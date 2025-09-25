@@ -28,4 +28,7 @@
 	background-color: #fff;
 	backface-visibility: hidden;
 	transform: rotateY(180deg);
+
+	// Prevent the image from being re-requested during rotation by keeping it in a composited layer
+	will-change: transform;
 }
