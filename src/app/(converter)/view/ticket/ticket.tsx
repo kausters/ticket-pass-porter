@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useRef, useState } from 'react';
 
 import { Ticket } from '../../ticket.model';
 import TicketData from './data/ticket-data';
@@ -27,17 +27,17 @@ export default TicketComponent;
 
 function useToggleOriginal() {
 	const [showOriginal, setShowOriginal] = useState(false);
-	const [hasRendered, setHasRendered] = useState(false);
+	const hasShownRef = useRef(false);
 
 	function handleToggleOriginal() {
 		setShowOriginal(!showOriginal);
-		if (!hasRendered && !showOriginal) {
-			setHasRendered(true);
+		if (!hasShownRef.current && !showOriginal) {
+			hasShownRef.current = true;
 		}
 	}
 
 	const TicketOriginal: typeof TicketImage = (props) => {
-		if (!showOriginal && !hasRendered) return null;
+		if (!showOriginal && !hasShownRef.current) return null;
 		return <TicketImage {...props} />;
 	};
 
