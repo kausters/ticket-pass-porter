@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { DateTime } from 'luxon';
 import { FunctionComponent } from 'react';
 
@@ -7,15 +8,16 @@ import styles from './ticket-data.module.scss';
 
 interface Props {
 	data: Ticket;
+	className?: string;
 }
 
-const TicketData: FunctionComponent<Props> = ({ data }) => {
+const TicketData: FunctionComponent<Props> = ({ data, className }) => {
 	const start = DateTime.fromISO(data.start);
 	const end = data.end ? DateTime.fromISO(data.end) : null;
 	const purchased = DateTime.fromISO(data.purchased);
 
 	return (
-		<div className={styles.container}>
+		<div className={clsx(styles.container, className)}>
 			<div className={styles.top}>
 				<div className={styles.topLeft}>
 					<h2 className={styles.title}>Biļete</h2>
