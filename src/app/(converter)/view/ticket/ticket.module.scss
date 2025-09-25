@@ -51,6 +51,10 @@
 		opacity: 0.4;
 		transition: opacity 0.2s ease-out;
 
+		// Invert the icon color based on the background
+		mix-blend-mode: difference;
+		filter: invert(1);
+
 		&:hover {
 			opacity: 0.8;
 		}
