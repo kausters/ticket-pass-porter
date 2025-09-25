@@ -1,10 +1,23 @@
 .container {
 	display: block;
-	position: relative;
 	width: 440px;
+	perspective: 3200px;
 }
 
-.data {}
+.ticket {
+	position: relative;
+	transform-style: preserve-3d;
+	transition: transform 0.5s ease-out;
+}
+
+.container:hover .ticket {
+	transform: rotateY(180deg);
+}
+
+.data {
+	backface-visibility: hidden;
+	transform: rotateY(0deg);
+}
 
 .image {
 	position: absolute;
@@ -12,4 +25,7 @@
 	width: 100%;
 	height: 100%;
 	object-fit: contain;
+	background-color: #fff;
+	backface-visibility: hidden;
+	transform: rotateY(180deg);
 }
