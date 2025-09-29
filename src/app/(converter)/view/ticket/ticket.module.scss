@@ -40,6 +40,11 @@
 	display: flex;
 	flex-direction: column;
 
+	// Invert the icon color based on the background
+	// (Should be on button but that doesn't work in Safari for some reason)
+	mix-blend-mode: difference;
+	filter: invert(1);
+
 	button {
 		appearance: none;
 		border: none;
@@ -50,10 +55,6 @@
 		padding: 0.25rem;
 		opacity: 0.4;
 		transition: opacity 0.2s ease-out;
-
-		// Invert the icon color based on the background
-		mix-blend-mode: difference;
-		filter: invert(1);
 
 		&:hover {
 			opacity: 0.8;
