@@ -8,7 +8,7 @@
         "@nuintun/qrcode": "^3.4.0",
         "clsx": "^2.1.1",
         "fast-xml-parser": "^4.3.6",
-        "ics": "^3.7.2",
+        "ics": "^3.8.1",
         "luxon": "^3.4.4",
         "next": "^15.5.3",
         "pdfjs-dist": "^4.0.379",
@@ -798,7 +798,7 @@
 
     "iconv-lite": ["iconv-lite@0.6.3", "", { "dependencies": { "safer-buffer": ">= 2.1.2 < 3.0.0" } }, "sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw=="],
 
-    "ics": ["ics@3.7.2", "", { "dependencies": { "nanoid": "^3.1.23", "runes2": "^1.1.2", "yup": "^1.2.0" } }, "sha512-UC5bBJYKyzkYZv4/AoIV9dsZw+rwFkUOtHHhnxmb0HTUEpfDmfl5sB9DlePKrTxx6SGMXiIQbiElf66viSTB0A=="],
+    "ics": ["ics@3.8.1", "", { "dependencies": { "nanoid": "^3.1.23", "runes2": "^1.1.2", "yup": "^1.2.0" } }, "sha512-UqQlfkajfhrS4pUGQfGIJMYz/Jsl/ob3LqcfEhUmLbwumg+ZNkU0/6S734Vsjq3/FYNpEcZVKodLBoe+zBM69g=="],
 
     "ignore": ["ignore@5.3.1", "", {}, "sha512-5Fytz/IraMjqpwfd34ke28PTVMjZjJG2MPn5t7OE4eUCUNf8BAa7b5WUS9/Qvr6mwOQS7Mk6vdsMno5he+T8Xw=="],
 
