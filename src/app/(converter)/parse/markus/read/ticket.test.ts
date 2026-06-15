@@ -39,4 +39,31 @@ describe('parseTicket', () => {
 			expect(ticket.type).toBe('Kino Guru');
 		});
 	});
+
+	describe('show-info table (mapped by column position)', () => {
+		/* The header reading order is [time, date, row, seat] while the value
+		reading order is [row, seat, time, date], so a naive zip would mis-map.
+		These tickets also have wrapped titles, so the values are index-shifted too —
+		both are only correct when read by x-column. */
+
+		it('maps row/seat/time/date by column despite a wrapped title', () => {
+			const ticket = parseTicket(multiLineTitleTicket);
+			expect(ticket.row).toBe(7);
+			expect(ticket.seat).toBe(12);
+			expect(DateTime.fromISO(ticket.start).toFormat('yyyy-MM-dd HH:mm')).toBe('2026-07-10 19:30');
+		});
+
+		it('maps the second wrapped-title ticket correctly', () => {
+			const ticket = parseTicket(multiLineTitleTicket2);
+			expect(ticket.row).toBe(8);
+			expect(ticket.seat).toBe(13);
+			expect(DateTime.fromISO(ticket.start).toFormat('yyyy-MM-dd HH:mm')).toBe('2026-08-20 19:30');
+		});
+
+		it('still reads the single-line ticket table correctly', () => {
+			const ticket = parseTicket(singleLineTicket);
+			expect(ticket.row).toBe(9);
+			expect(ticket.seat).toBe(13);
+		});
+	});
 });

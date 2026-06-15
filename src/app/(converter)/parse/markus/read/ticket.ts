@@ -5,16 +5,34 @@ import { Line, TicketReadData } from './read.model';
 
 const dateTimeOptions: DateTimeOptions = { zone: 'Europe/Riga', locale: 'lv' };
 
-// The first label of the show-info table; a stable anchor between the title and the values
-const showTableHeader = 'Seansa laiks';
+// The labels of the show-info table cells. Their reading order does not match
+// their visual (left-to-right) order, so we map values to them by x position.
+const showTableHeaders = {
+	row: 'Rinda',
+	seat: 'Vieta',
+	time: 'Seansa laiks',
+	date: 'Seansa datums',
+} as const;
+
+// Rows are separated vertically by far more than this; used to group items into a row
+const yTolerance = 5;
 
 // Fixed layout before the title: [0] code, [1] auditorium, [2] section, then the title
 const titleStartIndex = 3;
+
+interface ShowTable {
+	row: string;
+	seat: string;
+	time: string;
+	date: string;
+}
 
 export function parseTicket(data: Line[]): TicketReadData {
 	// The title can wrap across several text items, so we anchor on the show-info
 	// table header instead of assuming a fixed position for everything after it.
 	const headerIndex = getShowTableHeaderIndex(data);
+	const showTable = getShowTable(data);
+	const purchased = getTicketPurchased(data);
 
 	return {
 		code: getTicketCode(data),
@@ -23,19 +41,52 @@ export function parseTicket(data: Line[]): TicketReadData {
 		name: getTicketName(data, headerIndex),
 		type: data[headerIndex - 2].str,
 		rating: data[headerIndex - 1].str,
-		row: parseInt(data[10].str, 10),
-		seat: parseInt(data[11].str, 10),
-		purchased: getTicketPurchased(data).toISO()!,
-		start: getTicketStart(data).toISO()!,
+		row: parseInt(showTable.row, 10),
+		seat: parseInt(showTable.seat, 10),
+		purchased: purchased.toISO()!,
+		start: getTicketStart(showTable, purchased).toISO()!,
 		price: getTicketPrice(data),
 		detail: getTicketDetail(data),
 	};
 }
 
 function getShowTableHeaderIndex(data: Line[]): number {
-	const index = data.findIndex((line) => line.str === showTableHeader);
+	const index = data.findIndex((line) => line.str === showTableHeaders.time);
 	assert(index !== -1, 'Could not find the show-info table header');
 	return index;
+}
+
+function getShowTable(data: Line[]): ShowTable {
+	// The show info is a two-row table: a header row, and a value row just below it.
+	// Find the value row, then read each cell from the column under its header (by x).
+	const headerLines = Object.values(showTableHeaders).map((label) => {
+		const line = data.find((item) => item.str === label);
+		assert(line !== undefined, `Could not find the "${label}" header`);
+		return line;
+	});
+
+	const headerY = Math.min(...headerLines.map((line) => line.y));
+	const below = data.filter((line) => line.y < headerY - yTolerance);
+	assert(below.length > 0, 'Could not find the show-info value row');
+
+	const valueY = Math.max(...below.map((line) => line.y));
+	const valueRow = below.filter((line) => Math.abs(line.y - valueY) < yTolerance);
+
+	const cellUnder = (label: string): string => {
+		const header = data.find((item) => item.str === label);
+		assert(header !== undefined, `Could not find the "${label}" header`);
+		const cell = valueRow.reduce((closest, line) =>
+			Math.abs(line.x - header.x) < Math.abs(closest.x - header.x) ? line : closest,
+		);
+		return cell.str;
+	};
+
+	return {
+		row: cellUnder(showTableHeaders.row),
+		seat: cellUnder(showTableHeaders.seat),
+		time: cellUnder(showTableHeaders.time),
+		date: cellUnder(showTableHeaders.date),
+	};
 }
 
 function getTicketName(data: Line[], headerIndex: number): string {
@@ -74,13 +125,11 @@ function getTicketPurchased(data: Line[]): DateTime {
 	return DateTime.fromFormat(dateString, 'dd.MM.yyyy HH:mm', dateTimeOptions);
 }
 
-function getTicketStart(data: Line[]): DateTime {
-	const [hour, minute] = data[12].str.split(':').map((str) => parseInt(str, 10));
-	const [day, month] = data[13].str.split('.').map((str) => parseInt(str, 10));
+function getTicketStart(showTable: ShowTable, purchased: DateTime): DateTime {
+	const [hour, minute] = showTable.time.split(':').map((str) => parseInt(str, 10));
+	const [day, month] = showTable.date.split('.').map((str) => parseInt(str, 10));
 
-	// We don't know the event start year, we'll start with the purchase year and fix it after constructing
-	const purchased = getTicketPurchased(data);
-
+	// We don't know the event start year, so we base it off the purchase year and fix it below
 	const start = DateTime.local(
 		purchased.year,
 		month,
