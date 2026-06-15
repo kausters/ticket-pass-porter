@@ -5,14 +5,24 @@ import { Line, TicketReadData } from './read.model';
 
 const dateTimeOptions: DateTimeOptions = { zone: 'Europe/Riga', locale: 'lv' };
 
+// The first label of the show-info table; a stable anchor between the title and the values
+const showTableHeader = 'Seansa laiks';
+
+// Fixed layout before the title: [0] code, [1] auditorium, [2] section, then the title
+const titleStartIndex = 3;
+
 export function parseTicket(data: Line[]): TicketReadData {
+	// The title can wrap across several text items, so we anchor on the show-info
+	// table header instead of assuming a fixed position for everything after it.
+	const headerIndex = getShowTableHeaderIndex(data);
+
 	return {
 		code: getTicketCode(data),
 		auditorium: data[1].str,
 		section: data[2].str,
-		name: data[3].str,
-		type: data[4].str,
-		rating: data[5].str,
+		name: getTicketName(data, headerIndex),
+		type: data[headerIndex - 2].str,
+		rating: data[headerIndex - 1].str,
 		row: parseInt(data[10].str, 10),
 		seat: parseInt(data[11].str, 10),
 		purchased: getTicketPurchased(data).toISO()!,
@@ -20,6 +30,23 @@ export function parseTicket(data: Line[]): TicketReadData {
 		price: getTicketPrice(data),
 		detail: getTicketDetail(data),
 	};
+}
+
+function getShowTableHeaderIndex(data: Line[]): number {
+	const index = data.findIndex((line) => line.str === showTableHeader);
+	assert(index !== -1, 'Could not find the show-info table header');
+	return index;
+}
+
+function getTicketName(data: Line[], headerIndex: number): string {
+	// The title sits between the section and the type/rating, which are the two
+	// items immediately before the show-info header. A long title wraps into
+	// multiple items, each possibly ending with a newline, so join them cleanly.
+	return data
+		.slice(titleStartIndex, headerIndex - 2)
+		.map((line) => line.str.replace(/\n/g, ' ').trim())
+		.filter((part) => part.length > 0)
+		.join(' ');
 }
 
 function getTicketCode(data: Line[]): string {
