@@ -1,4 +1,5 @@
 import type { TicketInvoice } from '../../../ticket.model';
+import type { Line } from './read.model';
 
 const defaultLocation: Required<TicketInvoice>['location'] = {
 	name: 'Forum Cinemas\n13. janvāra iela 8, Riga 1050, Latvia',
@@ -6,9 +7,9 @@ const defaultLocation: Required<TicketInvoice>['location'] = {
 	lon: 24.116259,
 };
 
-export function getInvoiceId(data: string[]): string {
+export function getInvoiceId(data: Line[]): string {
 	const invoiceIdIndex = 1;
-	return data[invoiceIdIndex];
+	return data[invoiceIdIndex].str;
 }
 
 export function getLocation(): TicketInvoice['location'] {

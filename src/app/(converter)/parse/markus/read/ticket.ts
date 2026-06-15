@@ -1,20 +1,20 @@
 import { DateTime, DateTimeOptions } from 'luxon';
 import { assert } from 'ts-essentials';
 
-import { TicketReadData } from './read.model';
+import { Line, TicketReadData } from './read.model';
 
 const dateTimeOptions: DateTimeOptions = { zone: 'Europe/Riga', locale: 'lv' };
 
-export function parseTicket(data: string[]): TicketReadData {
+export function parseTicket(data: Line[]): TicketReadData {
 	return {
 		code: getTicketCode(data),
-		auditorium: data[1],
-		section: data[2],
-		name: data[3],
-		type: data[4],
-		rating: data[5],
-		row: parseInt(data[10], 10),
-		seat: parseInt(data[11], 10),
+		auditorium: data[1].str,
+		section: data[2].str,
+		name: data[3].str,
+		type: data[4].str,
+		rating: data[5].str,
+		row: parseInt(data[10].str, 10),
+		seat: parseInt(data[11].str, 10),
 		purchased: getTicketPurchased(data).toISO()!,
 		start: getTicketStart(data).toISO()!,
 		price: getTicketPrice(data),
@@ -22,9 +22,9 @@ export function parseTicket(data: string[]): TicketReadData {
 	};
 }
 
-function getTicketCode(data: string[]): string {
+function getTicketCode(data: Line[]): string {
 	const codeLength = 11;
-	const code = data[0];
+	const code = data[0].str;
 
 	/* If the ticket code is shorter than expected, it must have ended with
 	a space character (valid alphanumeric) and was trimmed by the PDF reader.
@@ -40,16 +40,16 @@ function getTicketCode(data: string[]): string {
 	}
 }
 
-function getTicketPurchased(data: string[]): DateTime {
-	const dateString = data.at(-1);
+function getTicketPurchased(data: Line[]): DateTime {
+	const dateString = data.at(-1)?.str;
 	assert(dateString !== undefined);
 
 	return DateTime.fromFormat(dateString, 'dd.MM.yyyy HH:mm', dateTimeOptions);
 }
 
-function getTicketStart(data: string[]): DateTime {
-	const [hour, minute] = data[12].split(':').map((str) => parseInt(str, 10));
-	const [day, month] = data[13].split('.').map((str) => parseInt(str, 10));
+function getTicketStart(data: Line[]): DateTime {
+	const [hour, minute] = data[12].str.split(':').map((str) => parseInt(str, 10));
+	const [day, month] = data[13].str.split('.').map((str) => parseInt(str, 10));
 
 	// We don't know the event start year, we'll start with the purchase year and fix it after constructing
 	const purchased = getTicketPurchased(data);
@@ -73,9 +73,9 @@ function getTicketStart(data: string[]): DateTime {
 	}
 }
 
-function getTicketPrice(data: string[]): number {
-	const prices = data.filter((str) => str.endsWith('EUR'));
-	const finalPrice = prices.at(-1);
+function getTicketPrice(data: Line[]): number {
+	const prices = data.filter((line) => line.str.endsWith('EUR'));
+	const finalPrice = prices.at(-1)?.str;
 	assert(finalPrice !== undefined);
 
 	return parseInt(finalPrice.replace(/[.,]/, ''));
@@ -90,9 +90,9 @@ function findIndexFrom<T>(
 	return indexInSubArray === -1 ? -1 : indexInSubArray + startIndex;
 }
 
-function getTicketDetail(data: string[]): string {
+function getTicketDetail(data: Line[]): string {
 	// Find the first line that ends with '\n' and continue until the first line that doesn't end with '\n' (included)
-	const start = data.findIndex((str) => str.endsWith('\n'));
-	const end = findIndexFrom(data, (str) => !str.endsWith('\n'), start);
-	return data.slice(start, end + 1).join('');
+	const start = data.findIndex((line) => line.str.endsWith('\n'));
+	const end = findIndexFrom(data, (line) => !line.str.endsWith('\n'), start);
+	return data.slice(start, end + 1).map((line) => line.str).join('');
 }
