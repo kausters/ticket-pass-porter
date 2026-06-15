@@ -66,4 +66,19 @@ describe('parseTicket', () => {
 			expect(ticket.seat).toBe(13);
 		});
 	});
+
+	describe('detail block', () => {
+		it('reads the disclaimer from a single-line ticket', () => {
+			const ticket = parseTicket(singleLineTicket);
+			expect(ticket.detail).toContain('Lūdzam saglabāt biļeti līdz seansa beigām.');
+			expect(ticket.detail).toContain('Aizliegts ienest ārpus k/t');
+		});
+
+		it('reads the disclaimer without including the wrapped title', () => {
+			const ticket = parseTicket(multiLineTitleTicket);
+			expect(ticket.detail).toContain('Paldies par pirkumu!');
+			expect(ticket.detail).not.toContain('Gredzenu');
+			expect(ticket.detail).not.toContain('EUR');
+		});
+	});
 });

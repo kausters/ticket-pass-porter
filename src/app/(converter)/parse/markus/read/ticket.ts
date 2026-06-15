@@ -17,6 +17,9 @@ const showTableHeaders = {
 // Rows are separated vertically by far more than this; used to group items into a row
 const yTolerance = 5;
 
+// Appears once near the end of every ticket, just before the purchase date
+const footerMarker = 'www.forumcinemas.lv';
+
 // Fixed layout before the title: [0] code, [1] auditorium, [2] section, then the title
 const titleStartIndex = 3;
 
@@ -157,18 +160,20 @@ function getTicketPrice(data: Line[]): number {
 	return parseInt(finalPrice.replace(/[.,]/, ''));
 }
 
-function findIndexFrom<T>(
-	array: T[],
-	predicate: Parameters<Array<T>['findIndex']>[0],
-	startIndex: number,
-): number {
-	const indexInSubArray = array.slice(startIndex).findIndex(predicate);
-	return indexInSubArray === -1 ? -1 : indexInSubArray + startIndex;
-}
-
 function getTicketDetail(data: Line[]): string {
-	// Find the first line that ends with '\n' and continue until the first line that doesn't end with '\n' (included)
-	const start = data.findIndex((line) => line.str.endsWith('\n'));
-	const end = findIndexFrom(data, (line) => !line.str.endsWith('\n'), start);
-	return data.slice(start, end + 1).map((line) => line.str).join('');
+	// The detail block is the disclaimer text between the price values and the
+	// footer marker. We can't key off the first newline-terminated line anymore,
+	// because a wrapped movie title also ends with a newline.
+	const footerIndex = data.findIndex((line) => line.str === footerMarker);
+	assert(footerIndex !== -1, 'Could not find the ticket footer marker');
+
+	const lastPriceIndex = data.reduce(
+		(last, line, index) => (index < footerIndex && line.str.endsWith('EUR') ? index : last),
+		-1,
+	);
+
+	return data
+		.slice(lastPriceIndex + 1, footerIndex)
+		.map((line) => line.str)
+		.join('');
 }
